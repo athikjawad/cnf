@@ -1,176 +1,513 @@
-export type ShipmentStatus =
-  | "Documents Pending"
-  | "Arrived at Port"
-  | "Customs Review"
-  | "Cleared"
-  | "Truck Assigned"
-  | "In Transit"
-  | "Delivered"
-  | "Delayed";
+// SFI Platform — Mock data layer
+// All data centers around Jobs (atomic unit). Other entities reference jobId.
 
-export type ShipmentMode = "Sea" | "Air" | "Land";
-export type ShipmentType = "Import" | "Export";
-export type Port = "Chittagong" | "Mongla" | "Hazrat Shahjalal" | "Benapole";
+export type RegId =
+  | "SEA EXPORT"
+  | "SEA IMPORT"
+  | "AIR EXPORT"
+  | "AIR IMPORT"
+  | "LAND PORT EXPORT"
+  | "LAND PORT IMPORT";
 
-export interface Shipment {
+export type JobStatus = "ACTIVE" | "PENDING DOCS" | "CLEARED" | "INCOMPLETE" | "COMPLETED" | "HOLD" | "CANCELLED";
+
+export type Currency = "USD" | "EUR" | "GBP";
+
+export interface Party {
   id: string;
-  jobNo: string;
-  client: string;
-  type: ShipmentType;
-  mode: ShipmentMode;
-  port: Port;
-  blNo: string;
-  containerNo: string;
-  commodity: string;
-  origin: string;
-  destination: string;
-  status: ShipmentStatus;
-  eta: string;
-  value: number;
-  profit: number;
-  assignedTo: string;
-  createdAt: string;
+  name: string;
+  address: string;
+  contact: string;
+  concerns: string[]; // sub-companies / divisions
 }
 
-export interface Client {
+export interface Job {
+  jobNo: string;
+  jobDate: string; // ISO
+  jobYear: number;
+  regId: RegId;
+  jobType: "EXPORT" | "IMPORT";
+  shipmentMode: "Sea" | "Air" | "Land";
+  status: JobStatus;
+  completion: number; // 0..100
+  // parties
+  partyId: string;
+  partyName: string;
+  concern: string;
+  consigneeName: string;
+  consigneeAddress: string;
+  // shipment
+  goodsDescription: string;
+  packageQty: number;
+  packageType: string;
+  cbm: number;
+  grossWeight: number;
+  netWeight: number;
+  cfValue: number;
+  currency: Currency;
+  exchangeRate: number;
+  cfValueBdt: number;
+  assessableValue: number;
+  unitValue: number;
+  // documentation
+  beNo?: string;
+  beDate?: string;
+  invoiceNo?: string;
+  invoiceDate?: string;
+  lcNo?: string;
+  lcDate?: string;
+  ipEpNo?: string;
+  ipEpDate?: string;
+  hsCode?: string;
+  // air-only
+  awbNo?: string;
+  awbDate?: string;
+  // shipping/logistics
+  blNo?: string;
+  blDate?: string;
+  containerNo?: string;
+  vesselName?: string;
+  shippingAgent?: string;
+  offDock?: string;
+  transportName?: string;
+  station: "Chittagong Port" | "Benapole" | "Hazrat Shahjalal Airport";
+  remarks?: string;
+  portCharge: "NIL" | "Paid" | "Pending";
+  commission: number;
+  // assignment
+  assignedTo: string;
+}
+
+export const parties: Party[] = [
+  {
+    id: "p1",
+    name: "Rahman Fabrics Ltd.",
+    address: "Plot 42, BSCIC, Gazipur",
+    contact: "+880 1711 234567",
+    concerns: ["Rahman Knitwear", "Rahman Yarn Division"],
+  },
+  {
+    id: "p2",
+    name: "Bengal Pharma Industries",
+    address: "Tongi I/A, Dhaka",
+    contact: "+880 1812 345678",
+    concerns: ["Bengal Pharma Export Unit", "Bengal API"],
+  },
+  {
+    id: "p3",
+    name: "Padma Electronics",
+    address: "Motijheel C/A, Dhaka",
+    contact: "+880 1913 456789",
+    concerns: ["Padma Mobile", "Padma Home Appliance"],
+  },
+  {
+    id: "p4",
+    name: "Meghna Textile Mills",
+    address: "Narayanganj",
+    contact: "+880 1614 567890",
+    concerns: ["Meghna Garments"],
+  },
+  {
+    id: "p5",
+    name: "Surma FMCG Ltd.",
+    address: "Sylhet",
+    contact: "+880 1515 678901",
+    concerns: ["Surma Foods", "Surma Beverage"],
+  },
+];
+
+export const expenseHeads = [
+  "Customs Duty",
+  "VAT (AT)",
+  "Port Charge",
+  "Shipping Line Charge",
+  "Off-Dock Handling",
+  "Transport (Truck)",
+  "Documentation",
+  "Survey Fee",
+  "Demurrage",
+  "Labour",
+  "Misc",
+];
+
+export const shippingAgents = [
+  "Maersk Bangladesh",
+  "MSC Bangladesh",
+  "CMA CGM Bangladesh",
+  "Hapag-Lloyd",
+  "ONE Line",
+  "Evergreen",
+];
+
+export const offDocks = ["NIL", "Summit Alliance Off-Dock", "QNS Container Services", "Ocean Container Ltd."];
+
+export const stations = ["Chittagong Port", "Benapole", "Hazrat Shahjalal Airport"] as const;
+
+const today = new Date();
+const daysAgo = (n: number) => {
+  const d = new Date(today);
+  d.setDate(d.getDate() - n);
+  return d.toISOString().slice(0, 10);
+};
+
+export const jobs: Job[] = [
+  {
+    jobNo: "1345",
+    jobDate: daysAgo(2),
+    jobYear: today.getFullYear(),
+    regId: "SEA IMPORT",
+    jobType: "IMPORT",
+    shipmentMode: "Sea",
+    status: "ACTIVE",
+    completion: 60,
+    partyId: "p1",
+    partyName: "Rahman Fabrics Ltd.",
+    concern: "Rahman Knitwear",
+    consigneeName: "Rahman Knitwear",
+    consigneeAddress: "Plot 42, BSCIC, Gazipur",
+    goodsDescription: "100% Cotton Yarn - 30s",
+    packageQty: 480,
+    packageType: "Bags",
+    cbm: 64.5,
+    grossWeight: 12500,
+    netWeight: 12000,
+    cfValue: 48000,
+    currency: "USD",
+    exchangeRate: 119.5,
+    cfValueBdt: 5736000,
+    assessableValue: 5800000,
+    unitValue: 100,
+    beNo: "BE-2024-08712",
+    beDate: daysAgo(1),
+    invoiceNo: "INV-CN-44211",
+    invoiceDate: daysAgo(20),
+    lcNo: "LC-DBBL-771",
+    lcDate: daysAgo(35),
+    ipEpNo: "IP-2024-3344",
+    ipEpDate: daysAgo(30),
+    hsCode: "5205.13.00",
+    blNo: "MAEU-BD-998877",
+    blDate: daysAgo(8),
+    containerNo: "MSKU-7788991",
+    vesselName: "MV Maersk Chittagong",
+    shippingAgent: "Maersk Bangladesh",
+    offDock: "Summit Alliance Off-Dock",
+    transportName: "Karim Transport",
+    station: "Chittagong Port",
+    remarks: "Cotton bales — handle dry",
+    portCharge: "Pending",
+    commission: 25000,
+    assignedTo: "Nadia Islam",
+  },
+  {
+    jobNo: "1346",
+    jobDate: daysAgo(5),
+    jobYear: today.getFullYear(),
+    regId: "AIR IMPORT",
+    jobType: "IMPORT",
+    shipmentMode: "Air",
+    status: "PENDING DOCS",
+    completion: 35,
+    partyId: "p2",
+    partyName: "Bengal Pharma Industries",
+    concern: "Bengal API",
+    consigneeName: "Bengal API",
+    consigneeAddress: "Tongi I/A, Dhaka",
+    goodsDescription: "API raw materials (cold chain)",
+    packageQty: 24,
+    packageType: "Cartons",
+    cbm: 3.2,
+    grossWeight: 480,
+    netWeight: 420,
+    cfValue: 78000,
+    currency: "USD",
+    exchangeRate: 119.5,
+    cfValueBdt: 9321000,
+    assessableValue: 9400000,
+    unitValue: 3250,
+    invoiceNo: "INV-IN-991",
+    invoiceDate: daysAgo(7),
+    hsCode: "2941.90.00",
+    awbNo: "AWB-176-22113344",
+    awbDate: daysAgo(5),
+    station: "Hazrat Shahjalal Airport",
+    portCharge: "NIL",
+    commission: 18000,
+    assignedTo: "Nadia Islam",
+  },
+  {
+    jobNo: "1347",
+    jobDate: daysAgo(8),
+    jobYear: today.getFullYear(),
+    regId: "SEA EXPORT",
+    jobType: "EXPORT",
+    shipmentMode: "Sea",
+    status: "CLEARED",
+    completion: 90,
+    partyId: "p4",
+    partyName: "Meghna Textile Mills",
+    concern: "Meghna Garments",
+    consigneeName: "H&M Sweden AB",
+    consigneeAddress: "Stockholm, Sweden",
+    goodsDescription: "Knit T-shirts (men's)",
+    packageQty: 1240,
+    packageType: "Cartons",
+    cbm: 88.4,
+    grossWeight: 14800,
+    netWeight: 14000,
+    cfValue: 96000,
+    currency: "USD",
+    exchangeRate: 119.5,
+    cfValueBdt: 11472000,
+    assessableValue: 11500000,
+    unitValue: 4.2,
+    invoiceNo: "INV-EXP-2231",
+    invoiceDate: daysAgo(10),
+    hsCode: "6109.10.00",
+    blNo: "MSCU-EXP-44551",
+    blDate: daysAgo(6),
+    containerNo: "MSCU-1122334",
+    vesselName: "MSC Diana",
+    shippingAgent: "MSC Bangladesh",
+    offDock: "NIL",
+    transportName: "Sundarban Logistics",
+    station: "Chittagong Port",
+    portCharge: "Paid",
+    commission: 32000,
+    assignedTo: "Nadia Islam",
+  },
+  {
+    jobNo: "1348",
+    jobDate: daysAgo(12),
+    jobYear: today.getFullYear(),
+    regId: "LAND PORT IMPORT",
+    jobType: "IMPORT",
+    shipmentMode: "Land",
+    status: "INCOMPLETE",
+    completion: 45,
+    partyId: "p3",
+    partyName: "Padma Electronics",
+    concern: "Padma Home Appliance",
+    consigneeName: "Padma Home Appliance",
+    consigneeAddress: "Motijheel, Dhaka",
+    goodsDescription: "LED panels & accessories",
+    packageQty: 320,
+    packageType: "Cartons",
+    cbm: 42.0,
+    grossWeight: 5800,
+    netWeight: 5400,
+    cfValue: 36000,
+    currency: "USD",
+    exchangeRate: 119.5,
+    cfValueBdt: 4302000,
+    assessableValue: 4350000,
+    unitValue: 112,
+    invoiceNo: "INV-IN-7714",
+    invoiceDate: daysAgo(14),
+    hsCode: "8528.72.00",
+    station: "Benapole",
+    portCharge: "Pending",
+    commission: 15000,
+    assignedTo: "Nadia Islam",
+  },
+  {
+    jobNo: "1342",
+    jobDate: daysAgo(28),
+    jobYear: today.getFullYear(),
+    regId: "SEA IMPORT",
+    jobType: "IMPORT",
+    shipmentMode: "Sea",
+    status: "COMPLETED",
+    completion: 100,
+    partyId: "p5",
+    partyName: "Surma FMCG Ltd.",
+    concern: "Surma Foods",
+    consigneeName: "Surma Foods",
+    consigneeAddress: "Sylhet",
+    goodsDescription: "Edible oil (palm) drums",
+    packageQty: 600,
+    packageType: "Drums",
+    cbm: 120,
+    grossWeight: 24000,
+    netWeight: 23000,
+    cfValue: 58000,
+    currency: "USD",
+    exchangeRate: 118.0,
+    cfValueBdt: 6844000,
+    assessableValue: 6900000,
+    unitValue: 96,
+    beNo: "BE-2024-08512",
+    beDate: daysAgo(20),
+    invoiceNo: "INV-MY-3321",
+    invoiceDate: daysAgo(40),
+    hsCode: "1511.90.00",
+    blNo: "ONE-771122",
+    containerNo: "ONEU-9988771",
+    vesselName: "ONE Harmony",
+    shippingAgent: "ONE Line",
+    station: "Chittagong Port",
+    portCharge: "Paid",
+    commission: 28000,
+    assignedTo: "Nadia Islam",
+  },
+];
+
+export interface Expense {
+  id: string;
+  jobNo: string;
+  expenseHead: string;
+  amount: number;
+  description: string;
+  date: string;
+  approvedBy?: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+}
+
+export const expenses: Expense[] = [
+  { id: "e1", jobNo: "1345", expenseHead: "Customs Duty", amount: 1450000, description: "Duty paid via DBBL", date: daysAgo(1), status: "APPROVED", approvedBy: "Tanvir Rahim" },
+  { id: "e2", jobNo: "1345", expenseHead: "Port Charge", amount: 78000, description: "CPA charges", date: daysAgo(1), status: "PENDING" },
+  { id: "e3", jobNo: "1345", expenseHead: "Off-Dock Handling", amount: 42000, description: "Summit Alliance", date: daysAgo(1), status: "PENDING" },
+  { id: "e4", jobNo: "1346", expenseHead: "Documentation", amount: 8500, description: "Air courier docs", date: daysAgo(4), status: "APPROVED", approvedBy: "Karim Hossain" },
+  { id: "e5", jobNo: "1347", expenseHead: "Shipping Line Charge", amount: 95000, description: "MSC THC", date: daysAgo(7), status: "APPROVED", approvedBy: "Tanvir Rahim" },
+  { id: "e6", jobNo: "1347", expenseHead: "Transport (Truck)", amount: 22000, description: "Factory to port", date: daysAgo(8), status: "APPROVED", approvedBy: "Tanvir Rahim" },
+  { id: "e7", jobNo: "1348", expenseHead: "Customs Duty", amount: 870000, description: "Duty (partial)", date: daysAgo(10), status: "PENDING" },
+  { id: "e8", jobNo: "1342", expenseHead: "Customs Duty", amount: 1620000, description: "Duty paid", date: daysAgo(25), status: "APPROVED", approvedBy: "Tanvir Rahim" },
+];
+
+export interface Bill {
+  id: string;
+  billNo: string;
+  jobNo: string;
+  partyName: string;
+  billAmount: number;
+  billDate: string;
+  dueDate: string;
+  status: "PENDING" | "FORWARDED" | "PAID" | "PARTIAL";
+  forwardedDate?: string;
+  forwardRef?: string;
+}
+
+export const bills: Bill[] = [
+  { id: "b1", billNo: "BILL-2024-0451", jobNo: "1345", partyName: "Rahman Fabrics Ltd.", billAmount: 1745000, billDate: daysAgo(1), dueDate: daysAgo(-14), status: "PENDING" },
+  { id: "b2", billNo: "BILL-2024-0449", jobNo: "1347", partyName: "Meghna Textile Mills", billAmount: 1280000, billDate: daysAgo(5), dueDate: daysAgo(-10), status: "FORWARDED", forwardedDate: daysAgo(4), forwardRef: "FWD-991" },
+  { id: "b3", billNo: "BILL-2024-0445", jobNo: "1342", partyName: "Surma FMCG Ltd.", billAmount: 1980000, billDate: daysAgo(22), dueDate: daysAgo(-7), status: "PAID" },
+  { id: "b4", billNo: "BILL-2024-0440", jobNo: "1348", partyName: "Padma Electronics", billAmount: 980000, billDate: daysAgo(9), dueDate: daysAgo(5), status: "PARTIAL" },
+];
+
+export type DispatchStatus = "Cleared" | "Truck Assigned" | "In Transit" | "Delivered";
+
+export interface Dispatch {
+  id: string;
+  jobNo: string;
+  partyName: string;
+  destination: string;
+  transportName: string;
+  vehicleNo?: string;
+  driverContact?: string;
+  status: DispatchStatus;
+  podUrl?: string;
+}
+
+export const dispatches: Dispatch[] = [
+  { id: "d1", jobNo: "1347", partyName: "Meghna Textile Mills", destination: "Chittagong Port Yard 3", transportName: "Sundarban Logistics", vehicleNo: "DM-CHA-1144", driverContact: "+880 1711 998877", status: "Delivered", podUrl: "/pod/d1.jpg" },
+  { id: "d2", jobNo: "1345", partyName: "Rahman Fabrics Ltd.", destination: "Gazipur Factory", transportName: "Karim Transport", vehicleNo: "DM-LA-7789", driverContact: "+880 1812 112233", status: "Truck Assigned" },
+  { id: "d3", jobNo: "1342", partyName: "Surma FMCG Ltd.", destination: "Sylhet Warehouse", transportName: "Surma Carriers", vehicleNo: "DM-SY-2231", status: "In Transit" },
+  { id: "d4", jobNo: "1348", partyName: "Padma Electronics", destination: "Motijheel Warehouse", transportName: "Pending Assignment", status: "Cleared" },
+];
+
+export interface TransportVendor {
   id: string;
   name: string;
   contact: string;
-  phone: string;
-  email: string;
-  address: string;
-  industry: string;
-  shipments: number;
-  outstanding: number;
-  totalRevenue: number;
+  routeSpec: string;
+  ratePerTrip: number;
+  active: boolean;
 }
 
-export interface Task {
+export const transportVendors: TransportVendor[] = [
+  { id: "v1", name: "Karim Transport", contact: "+880 1812 112233", routeSpec: "Chittagong → Dhaka/Gazipur", ratePerTrip: 28000, active: true },
+  { id: "v2", name: "Sundarban Logistics", contact: "+880 1711 998877", routeSpec: "Chittagong → Anywhere", ratePerTrip: 32000, active: true },
+  { id: "v3", name: "Surma Carriers", contact: "+880 1515 776655", routeSpec: "Chittagong → Sylhet", ratePerTrip: 38000, active: true },
+  { id: "v4", name: "Benapole Express", contact: "+880 1614 223344", routeSpec: "Benapole → Dhaka", ratePerTrip: 22000, active: true },
+  { id: "v5", name: "Old Reliable Tpt", contact: "+880 1313 445566", routeSpec: "Local Dhaka", ratePerTrip: 8000, active: false },
+];
+
+export interface ActivityLog {
   id: string;
-  title: string;
-  shipmentJobNo: string;
-  assignee: string;
-  dueDate: string;
-  priority: "Low" | "Medium" | "High" | "Urgent";
-  status: "Open" | "In Progress" | "Done";
+  timestamp: string;
+  user: string;
+  role: string;
+  action: string;
+  recordType: string;
+  recordId: string;
 }
 
-export interface Document {
-  id: string;
-  name: string;
-  type: "BL" | "Invoice" | "Packing List" | "LC" | "Certificate of Origin" | "Customs Bill";
-  shipmentJobNo: string;
-  uploadedBy: string;
-  uploadedAt: string;
-  status: "Verified" | "Pending Review" | "Issue Found";
-  size: string;
-}
+export const activityLogs: ActivityLog[] = [
+  { id: "a1", timestamp: new Date().toISOString(), user: "Nadia Islam", role: "Operations", action: "Created", recordType: "Job", recordId: "1345" },
+  { id: "a2", timestamp: new Date(Date.now() - 3600000).toISOString(), user: "Tanvir Rahim", role: "Accounts", action: "Approved Expense", recordType: "Expense", recordId: "e1" },
+  { id: "a3", timestamp: new Date(Date.now() - 7200000).toISOString(), user: "Karim Hossain", role: "Manager", action: "Forwarded Bill", recordType: "Bill", recordId: "b2" },
+  { id: "a4", timestamp: new Date(Date.now() - 86400000).toISOString(), user: "Nadia Islam", role: "Operations", action: "Updated Status", recordType: "Job", recordId: "1347" },
+];
 
-export interface Transport {
+export interface Voucher {
   id: string;
-  vendor: string;
-  truckNo: string;
-  driver: string;
-  phone: string;
-  route: string;
-  rate: number;
-  shipmentJobNo: string;
-  status: "Available" | "Booked" | "In Transit" | "Delivered";
-}
-
-export interface Invoice {
-  id: string;
-  invoiceNo: string;
-  client: string;
-  shipmentJobNo: string;
+  voucherNo: string;
+  date: string;
+  type: "Receipt" | "Payment" | "Journal" | "Contra";
+  debitAccount: string;
+  creditAccount: string;
   amount: number;
-  paid: number;
-  due: number;
-  issuedDate: string;
-  dueDate: string;
-  status: "Paid" | "Partial" | "Overdue" | "Pending";
+  narration: string;
+  jobNo?: string;
 }
 
-export const shipments: Shipment[] = [
-  { id: "1", jobNo: "JOB-2025-1042", client: "Apex Garments Ltd.", type: "Import", mode: "Sea", port: "Chittagong", blNo: "MAEU-7820145", containerNo: "MSKU-4421809", commodity: "Cotton Fabric (China)", origin: "Shanghai, CN", destination: "Gazipur", status: "Customs Review", eta: "2025-04-22", value: 84500, profit: 4200, assignedTo: "Karim Hossain", createdAt: "2025-04-08" },
-  { id: "2", jobNo: "JOB-2025-1041", client: "Bengal Pharma", type: "Import", mode: "Air", port: "Hazrat Shahjalal", blNo: "AWB-235-44190", containerNo: "—", commodity: "Pharmaceutical APIs", origin: "Mumbai, IN", destination: "Tongi", status: "Cleared", eta: "2025-04-19", value: 32100, profit: 2800, assignedTo: "Nadia Rahman", createdAt: "2025-04-15" },
-  { id: "3", jobNo: "JOB-2025-1040", client: "Star Electronics BD", type: "Import", mode: "Sea", port: "Chittagong", blNo: "EVRG-8841220", containerNo: "EGHU-7710043", commodity: "LED TV Panels", origin: "Busan, KR", destination: "Dhaka", status: "In Transit", eta: "2025-04-20", value: 121000, profit: 6500, assignedTo: "Karim Hossain", createdAt: "2025-04-02" },
-  { id: "4", jobNo: "JOB-2025-1039", client: "Apex Garments Ltd.", type: "Export", mode: "Sea", port: "Chittagong", blNo: "ONEY-3340119", containerNo: "TGHU-9920381", commodity: "Knit Garments", origin: "Gazipur", destination: "Hamburg, DE", status: "Delivered", eta: "2025-04-15", value: 215000, profit: 9800, assignedTo: "Sumon Ali", createdAt: "2025-03-28" },
-  { id: "5", jobNo: "JOB-2025-1038", client: "Greenfield FMCG", type: "Import", mode: "Land", port: "Benapole", blNo: "LND-22041", containerNo: "—", commodity: "Edible Oil Drums", origin: "Kolkata, IN", destination: "Jessore", status: "Delayed", eta: "2025-04-18", value: 45200, profit: -800, assignedTo: "Sumon Ali", createdAt: "2025-04-10" },
-  { id: "6", jobNo: "JOB-2025-1037", client: "Modhumoti Foods", type: "Import", mode: "Sea", port: "Mongla", blNo: "HLCU-6620412", containerNo: "HLXU-3329910", commodity: "Wheat", origin: "Sydney, AU", destination: "Khulna", status: "Truck Assigned", eta: "2025-04-21", value: 67800, profit: 3400, assignedTo: "Nadia Rahman", createdAt: "2025-04-05" },
-  { id: "7", jobNo: "JOB-2025-1036", client: "Square Machinery", type: "Import", mode: "Sea", port: "Chittagong", blNo: "CMA-5520199", containerNo: "CMAU-1180420", commodity: "Industrial Machinery", origin: "Hamburg, DE", destination: "Narayanganj", status: "Documents Pending", eta: "2025-04-25", value: 156000, profit: 7200, assignedTo: "Karim Hossain", createdAt: "2025-04-12" },
-  { id: "8", jobNo: "JOB-2025-1035", client: "Bengal Pharma", type: "Import", mode: "Air", port: "Hazrat Shahjalal", blNo: "AWB-176-33028", containerNo: "—", commodity: "Vaccine Cold Chain", origin: "Frankfurt, DE", destination: "Dhaka", status: "Arrived at Port", eta: "2025-04-19", value: 88400, profit: 5100, assignedTo: "Nadia Rahman", createdAt: "2025-04-16" },
+export const vouchers: Voucher[] = [
+  { id: "v1", voucherNo: "RV-2024-1101", date: daysAgo(1), type: "Receipt", debitAccount: "DBBL Bank", creditAccount: "Rahman Fabrics Ltd.", amount: 500000, narration: "Advance against Job 1345", jobNo: "1345" },
+  { id: "v2", voucherNo: "PV-2024-2231", date: daysAgo(2), type: "Payment", debitAccount: "Customs Duty", creditAccount: "DBBL Bank", amount: 1450000, narration: "Duty Job 1345", jobNo: "1345" },
+  { id: "v3", voucherNo: "JV-2024-091", date: daysAgo(3), type: "Journal", debitAccount: "Office Rent", creditAccount: "Rent Payable", amount: 75000, narration: "Office rent accrual" },
 ];
 
-export const clients: Client[] = [
-  { id: "c1", name: "Apex Garments Ltd.", contact: "Md. Tariq Aziz", phone: "+880 1711-220190", email: "tariq@apexgarments.bd", address: "Plot 41, Konabari, Gazipur", industry: "RMG / Garments", shipments: 24, outstanding: 8200, totalRevenue: 142000 },
-  { id: "c2", name: "Bengal Pharma", contact: "Dr. Sharmin Akter", phone: "+880 1819-445201", email: "procure@bengalpharma.com", address: "Tongi I/A, Gazipur", industry: "Pharmaceutical", shipments: 18, outstanding: 4400, totalRevenue: 96500 },
-  { id: "c3", name: "Star Electronics BD", contact: "Imran Khan", phone: "+880 1755-118840", email: "imran@starelec.bd", address: "Motijheel C/A, Dhaka", industry: "Electronics", shipments: 12, outstanding: 12500, totalRevenue: 78200 },
-  { id: "c4", name: "Greenfield FMCG", contact: "Rezaul Karim", phone: "+880 1922-662201", email: "ops@greenfield.bd", address: "Jessore Road, Khulna", industry: "FMCG", shipments: 9, outstanding: 2100, totalRevenue: 41800 },
-  { id: "c5", name: "Modhumoti Foods", contact: "Faria Hossain", phone: "+880 1711-009912", email: "faria@modhumoti.bd", address: "Khulna BSCIC", industry: "FMCG", shipments: 14, outstanding: 0, totalRevenue: 62200 },
-  { id: "c6", name: "Square Machinery", contact: "Anwar Sadat", phone: "+880 1733-201144", email: "anwar@squaremach.bd", address: "Narayanganj EPZ", industry: "Machinery", shipments: 6, outstanding: 18900, totalRevenue: 54100 },
+export const chartOfAccounts = [
+  { code: "1000", name: "Cash in Hand", type: "Asset" },
+  { code: "1010", name: "DBBL Bank", type: "Asset" },
+  { code: "1020", name: "EBL Bank", type: "Asset" },
+  { code: "1100", name: "Accounts Receivable", type: "Asset" },
+  { code: "2000", name: "Accounts Payable", type: "Liability" },
+  { code: "2100", name: "Rent Payable", type: "Liability" },
+  { code: "3000", name: "Capital", type: "Equity" },
+  { code: "4000", name: "Service Revenue", type: "Income" },
+  { code: "4010", name: "Commission Income", type: "Income" },
+  { code: "5000", name: "Customs Duty", type: "Expense" },
+  { code: "5010", name: "Port Charge", type: "Expense" },
+  { code: "5020", name: "Office Rent", type: "Expense" },
+  { code: "5030", name: "Salaries", type: "Expense" },
 ];
 
-export const tasks: Task[] = [
-  { id: "t1", title: "Submit Bill of Entry to Customs", shipmentJobNo: "JOB-2025-1042", assignee: "Karim Hossain", dueDate: "2025-04-20", priority: "Urgent", status: "In Progress" },
-  { id: "t2", title: "Collect Delivery Order from Shipping Line", shipmentJobNo: "JOB-2025-1037", assignee: "Nadia Rahman", dueDate: "2025-04-21", priority: "High", status: "Open" },
-  { id: "t3", title: "Verify HS Code for LED Panels", shipmentJobNo: "JOB-2025-1040", assignee: "Karim Hossain", dueDate: "2025-04-19", priority: "High", status: "Done" },
-  { id: "t4", title: "Arrange covered van — Khulna to Jessore", shipmentJobNo: "JOB-2025-1038", assignee: "Sumon Ali", dueDate: "2025-04-19", priority: "Urgent", status: "In Progress" },
-  { id: "t5", title: "Re-submit packing list — qty mismatch", shipmentJobNo: "JOB-2025-1036", assignee: "Karim Hossain", dueDate: "2025-04-22", priority: "Medium", status: "Open" },
-  { id: "t6", title: "Coordinate cold-chain handover", shipmentJobNo: "JOB-2025-1035", assignee: "Nadia Rahman", dueDate: "2025-04-19", priority: "Urgent", status: "Open" },
-  { id: "t7", title: "Final delivery confirmation", shipmentJobNo: "JOB-2025-1039", assignee: "Sumon Ali", dueDate: "2025-04-15", priority: "Low", status: "Done" },
-];
+// Helpers
+export const fmtBDT = (n: number) =>
+  "৳" + n.toLocaleString("en-BD", { maximumFractionDigits: 0 });
 
-export const documents: Document[] = [
-  { id: "d1", name: "BL_MAEU-7820145.pdf", type: "BL", shipmentJobNo: "JOB-2025-1042", uploadedBy: "Karim Hossain", uploadedAt: "2025-04-09", status: "Verified", size: "412 KB" },
-  { id: "d2", name: "Invoice_APX-220419.pdf", type: "Invoice", shipmentJobNo: "JOB-2025-1042", uploadedBy: "Karim Hossain", uploadedAt: "2025-04-09", status: "Verified", size: "188 KB" },
-  { id: "d3", name: "PackingList_APX-220419.pdf", type: "Packing List", shipmentJobNo: "JOB-2025-1042", uploadedBy: "Karim Hossain", uploadedAt: "2025-04-09", status: "Issue Found", size: "96 KB" },
-  { id: "d4", name: "BL_EVRG-8841220.pdf", type: "BL", shipmentJobNo: "JOB-2025-1040", uploadedBy: "Karim Hossain", uploadedAt: "2025-04-03", status: "Verified", size: "388 KB" },
-  { id: "d5", name: "LC_BEN-PHARMA-0418.pdf", type: "LC", shipmentJobNo: "JOB-2025-1041", uploadedBy: "Nadia Rahman", uploadedAt: "2025-04-15", status: "Verified", size: "240 KB" },
-  { id: "d6", name: "COO_China_APX.pdf", type: "Certificate of Origin", shipmentJobNo: "JOB-2025-1042", uploadedBy: "Karim Hossain", uploadedAt: "2025-04-10", status: "Pending Review", size: "144 KB" },
-  { id: "d7", name: "Invoice_SQM-220425.pdf", type: "Invoice", shipmentJobNo: "JOB-2025-1036", uploadedBy: "Karim Hossain", uploadedAt: "2025-04-13", status: "Issue Found", size: "210 KB" },
-];
+export const fmtDate = (iso: string) => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+};
 
-export const transports: Transport[] = [
-  { id: "tr1", vendor: "Padma Transport", truckNo: "Dhaka Metro-Ta-15-9912", driver: "Jamal Uddin", phone: "+880 1712-330912", route: "Chittagong → Gazipur", rate: 22000, shipmentJobNo: "JOB-2025-1042", status: "Booked" },
-  { id: "tr2", vendor: "Meghna Logistics", truckNo: "Ctg Metro-Tha-11-2234", driver: "Rofiqul Islam", phone: "+880 1819-441120", route: "Chittagong → Dhaka", rate: 19500, shipmentJobNo: "JOB-2025-1040", status: "In Transit" },
-  { id: "tr3", vendor: "Karnaphuli Trans.", truckNo: "Ctg Metro-Ta-14-7740", driver: "Mostafa Kamal", phone: "+880 1733-220914", route: "Mongla → Khulna", rate: 9800, shipmentJobNo: "JOB-2025-1037", status: "Booked" },
-  { id: "tr4", vendor: "Padma Transport", truckNo: "Dhaka Metro-Ta-19-4421", driver: "Selim Mia", phone: "+880 1922-110044", route: "Benapole → Jessore", rate: 7200, shipmentJobNo: "JOB-2025-1038", status: "Delivered" },
-  { id: "tr5", vendor: "Bengal Movers", truckNo: "Dhaka Metro-Ta-22-8810", driver: "Habibur Rahman", phone: "+880 1711-554420", route: "Available", rate: 0, shipmentJobNo: "—", status: "Available" },
-];
-
-export const invoices: Invoice[] = [
-  { id: "i1", invoiceNo: "INV-2025-0421", client: "Apex Garments Ltd.", shipmentJobNo: "JOB-2025-1039", amount: 9800, paid: 9800, due: 0, issuedDate: "2025-04-15", dueDate: "2025-04-30", status: "Paid" },
-  { id: "i2", invoiceNo: "INV-2025-0420", client: "Star Electronics BD", shipmentJobNo: "JOB-2025-1040", amount: 6500, paid: 0, due: 6500, issuedDate: "2025-04-10", dueDate: "2025-04-25", status: "Pending" },
-  { id: "i3", invoiceNo: "INV-2025-0419", client: "Square Machinery", shipmentJobNo: "JOB-2025-1036", amount: 7200, paid: 0, due: 7200, issuedDate: "2025-03-28", dueDate: "2025-04-12", status: "Overdue" },
-  { id: "i4", invoiceNo: "INV-2025-0418", client: "Bengal Pharma", shipmentJobNo: "JOB-2025-1041", amount: 2800, paid: 1400, due: 1400, issuedDate: "2025-04-12", dueDate: "2025-04-27", status: "Partial" },
-  { id: "i5", invoiceNo: "INV-2025-0417", client: "Modhumoti Foods", shipmentJobNo: "JOB-2025-1037", amount: 3400, paid: 3400, due: 0, issuedDate: "2025-04-08", dueDate: "2025-04-23", status: "Paid" },
-  { id: "i6", invoiceNo: "INV-2025-0416", client: "Greenfield FMCG", shipmentJobNo: "JOB-2025-1038", amount: 2100, paid: 0, due: 2100, issuedDate: "2025-03-25", dueDate: "2025-04-09", status: "Overdue" },
-];
-
-export const monthlyRevenue = [
-  { month: "Nov", revenue: 38200, shipments: 18 },
-  { month: "Dec", revenue: 42500, shipments: 22 },
-  { month: "Jan", revenue: 47800, shipments: 25 },
-  { month: "Feb", revenue: 51200, shipments: 28 },
-  { month: "Mar", revenue: 58900, shipments: 32 },
-  { month: "Apr", revenue: 64200, shipments: 35 },
-];
-
-export const portPerformance = [
-  { port: "Chittagong", shipments: 48, avgDays: 5.2 },
-  { port: "Hazrat Shahjalal", shipments: 22, avgDays: 2.1 },
-  { port: "Mongla", shipments: 14, avgDays: 6.0 },
-  { port: "Benapole", shipments: 9, avgDays: 3.4 },
-];
-
-export const statusColor: Record<ShipmentStatus, string> = {
-  "Documents Pending": "bg-warning/15 text-warning-foreground border-warning/40",
-  "Arrived at Port": "bg-info/15 text-info border-info/40",
-  "Customs Review": "bg-accent text-accent-foreground border-accent",
-  "Cleared": "bg-success/15 text-success border-success/40",
-  "Truck Assigned": "bg-primary/10 text-primary border-primary/30",
-  "In Transit": "bg-primary/15 text-primary border-primary/40",
-  "Delivered": "bg-success/20 text-success border-success/50",
-  "Delayed": "bg-destructive/15 text-destructive border-destructive/40",
+export const statusVariant = (s: JobStatus): "active" | "warn" | "info" | "danger" | "muted" => {
+  switch (s) {
+    case "ACTIVE":
+      return "active";
+    case "PENDING DOCS":
+      return "warn";
+    case "CLEARED":
+      return "info";
+    case "INCOMPLETE":
+      return "danger";
+    case "COMPLETED":
+      return "muted";
+    case "HOLD":
+      return "warn";
+    case "CANCELLED":
+      return "danger";
+  }
 };

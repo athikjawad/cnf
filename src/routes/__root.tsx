@@ -34,17 +34,17 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "PortFlow — C&F Operations Platform" },
+      { title: "SFI Platform — C&F Operations for Standard Freight Inc." },
       {
         name: "description",
         content:
-          "All-in-one operating platform for Bangladeshi Clearing & Forwarding companies. Manage shipments, customs, transport, clients and invoices in one place.",
+          "SFI Platform is the operating system for Standard Freight Incorporation — manage Jobs, Expenses, Bills, Transport, Accounts and Reports for Chittagong, Benapole and HSIA operations.",
       },
-      { property: "og:title", content: "PortFlow — C&F Operations Platform" },
+      { property: "og:title", content: "SFI Platform — C&F Operations" },
       {
         property: "og:description",
         content:
-          "Replace WhatsApp + Excel + paper. Run your C&F operations from one dashboard.",
+          "Replace WhatsApp + Excel + paper. Run C&F operations from one calm, modern dashboard.",
       },
       { property: "og:type", content: "website" },
     ],

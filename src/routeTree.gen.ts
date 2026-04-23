@@ -10,18 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UsersIndexRouteImport } from './routes/users.index'
 import { Route as TransportIndexRouteImport } from './routes/transport.index'
-import { Route as TasksIndexRouteImport } from './routes/tasks.index'
-import { Route as ShipmentsIndexRouteImport } from './routes/shipments.index'
-import { Route as InvoicesIndexRouteImport } from './routes/invoices.index'
-import { Route as DocumentsIndexRouteImport } from './routes/documents.index'
-import { Route as ClientsIndexRouteImport } from './routes/clients.index'
-import { Route as AnalyticsIndexRouteImport } from './routes/analytics.index'
-import { Route as ShipmentsJobNoRouteImport } from './routes/shipments.$jobNo'
+import { Route as SettingsIndexRouteImport } from './routes/settings.index'
+import { Route as ReportsIndexRouteImport } from './routes/reports.index'
+import { Route as JobsIndexRouteImport } from './routes/jobs.index'
+import { Route as ExpensesIndexRouteImport } from './routes/expenses.index'
+import { Route as BillsIndexRouteImport } from './routes/bills.index'
+import { Route as AccountsIndexRouteImport } from './routes/accounts.index'
+import { Route as JobsNewRouteImport } from './routes/jobs.new'
+import { Route as JobsJobNoRouteImport } from './routes/jobs.$jobNo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UsersIndexRoute = UsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TransportIndexRoute = TransportIndexRouteImport.update({
@@ -29,122 +36,141 @@ const TransportIndexRoute = TransportIndexRouteImport.update({
   path: '/transport/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TasksIndexRoute = TasksIndexRouteImport.update({
-  id: '/tasks/',
-  path: '/tasks/',
+const SettingsIndexRoute = SettingsIndexRouteImport.update({
+  id: '/settings/',
+  path: '/settings/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShipmentsIndexRoute = ShipmentsIndexRouteImport.update({
-  id: '/shipments/',
-  path: '/shipments/',
+const ReportsIndexRoute = ReportsIndexRouteImport.update({
+  id: '/reports/',
+  path: '/reports/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InvoicesIndexRoute = InvoicesIndexRouteImport.update({
-  id: '/invoices/',
-  path: '/invoices/',
+const JobsIndexRoute = JobsIndexRouteImport.update({
+  id: '/jobs/',
+  path: '/jobs/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DocumentsIndexRoute = DocumentsIndexRouteImport.update({
-  id: '/documents/',
-  path: '/documents/',
+const ExpensesIndexRoute = ExpensesIndexRouteImport.update({
+  id: '/expenses/',
+  path: '/expenses/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ClientsIndexRoute = ClientsIndexRouteImport.update({
-  id: '/clients/',
-  path: '/clients/',
+const BillsIndexRoute = BillsIndexRouteImport.update({
+  id: '/bills/',
+  path: '/bills/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AnalyticsIndexRoute = AnalyticsIndexRouteImport.update({
-  id: '/analytics/',
-  path: '/analytics/',
+const AccountsIndexRoute = AccountsIndexRouteImport.update({
+  id: '/accounts/',
+  path: '/accounts/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShipmentsJobNoRoute = ShipmentsJobNoRouteImport.update({
-  id: '/shipments/$jobNo',
-  path: '/shipments/$jobNo',
+const JobsNewRoute = JobsNewRouteImport.update({
+  id: '/jobs/new',
+  path: '/jobs/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JobsJobNoRoute = JobsJobNoRouteImport.update({
+  id: '/jobs/$jobNo',
+  path: '/jobs/$jobNo',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/shipments/$jobNo': typeof ShipmentsJobNoRoute
-  '/analytics/': typeof AnalyticsIndexRoute
-  '/clients/': typeof ClientsIndexRoute
-  '/documents/': typeof DocumentsIndexRoute
-  '/invoices/': typeof InvoicesIndexRoute
-  '/shipments/': typeof ShipmentsIndexRoute
-  '/tasks/': typeof TasksIndexRoute
+  '/jobs/$jobNo': typeof JobsJobNoRoute
+  '/jobs/new': typeof JobsNewRoute
+  '/accounts/': typeof AccountsIndexRoute
+  '/bills/': typeof BillsIndexRoute
+  '/expenses/': typeof ExpensesIndexRoute
+  '/jobs/': typeof JobsIndexRoute
+  '/reports/': typeof ReportsIndexRoute
+  '/settings/': typeof SettingsIndexRoute
   '/transport/': typeof TransportIndexRoute
+  '/users/': typeof UsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/shipments/$jobNo': typeof ShipmentsJobNoRoute
-  '/analytics': typeof AnalyticsIndexRoute
-  '/clients': typeof ClientsIndexRoute
-  '/documents': typeof DocumentsIndexRoute
-  '/invoices': typeof InvoicesIndexRoute
-  '/shipments': typeof ShipmentsIndexRoute
-  '/tasks': typeof TasksIndexRoute
+  '/jobs/$jobNo': typeof JobsJobNoRoute
+  '/jobs/new': typeof JobsNewRoute
+  '/accounts': typeof AccountsIndexRoute
+  '/bills': typeof BillsIndexRoute
+  '/expenses': typeof ExpensesIndexRoute
+  '/jobs': typeof JobsIndexRoute
+  '/reports': typeof ReportsIndexRoute
+  '/settings': typeof SettingsIndexRoute
   '/transport': typeof TransportIndexRoute
+  '/users': typeof UsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/shipments/$jobNo': typeof ShipmentsJobNoRoute
-  '/analytics/': typeof AnalyticsIndexRoute
-  '/clients/': typeof ClientsIndexRoute
-  '/documents/': typeof DocumentsIndexRoute
-  '/invoices/': typeof InvoicesIndexRoute
-  '/shipments/': typeof ShipmentsIndexRoute
-  '/tasks/': typeof TasksIndexRoute
+  '/jobs/$jobNo': typeof JobsJobNoRoute
+  '/jobs/new': typeof JobsNewRoute
+  '/accounts/': typeof AccountsIndexRoute
+  '/bills/': typeof BillsIndexRoute
+  '/expenses/': typeof ExpensesIndexRoute
+  '/jobs/': typeof JobsIndexRoute
+  '/reports/': typeof ReportsIndexRoute
+  '/settings/': typeof SettingsIndexRoute
   '/transport/': typeof TransportIndexRoute
+  '/users/': typeof UsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/shipments/$jobNo'
-    | '/analytics/'
-    | '/clients/'
-    | '/documents/'
-    | '/invoices/'
-    | '/shipments/'
-    | '/tasks/'
+    | '/jobs/$jobNo'
+    | '/jobs/new'
+    | '/accounts/'
+    | '/bills/'
+    | '/expenses/'
+    | '/jobs/'
+    | '/reports/'
+    | '/settings/'
     | '/transport/'
+    | '/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/shipments/$jobNo'
-    | '/analytics'
-    | '/clients'
-    | '/documents'
-    | '/invoices'
-    | '/shipments'
-    | '/tasks'
+    | '/jobs/$jobNo'
+    | '/jobs/new'
+    | '/accounts'
+    | '/bills'
+    | '/expenses'
+    | '/jobs'
+    | '/reports'
+    | '/settings'
     | '/transport'
+    | '/users'
   id:
     | '__root__'
     | '/'
-    | '/shipments/$jobNo'
-    | '/analytics/'
-    | '/clients/'
-    | '/documents/'
-    | '/invoices/'
-    | '/shipments/'
-    | '/tasks/'
+    | '/jobs/$jobNo'
+    | '/jobs/new'
+    | '/accounts/'
+    | '/bills/'
+    | '/expenses/'
+    | '/jobs/'
+    | '/reports/'
+    | '/settings/'
     | '/transport/'
+    | '/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ShipmentsJobNoRoute: typeof ShipmentsJobNoRoute
-  AnalyticsIndexRoute: typeof AnalyticsIndexRoute
-  ClientsIndexRoute: typeof ClientsIndexRoute
-  DocumentsIndexRoute: typeof DocumentsIndexRoute
-  InvoicesIndexRoute: typeof InvoicesIndexRoute
-  ShipmentsIndexRoute: typeof ShipmentsIndexRoute
-  TasksIndexRoute: typeof TasksIndexRoute
+  JobsJobNoRoute: typeof JobsJobNoRoute
+  JobsNewRoute: typeof JobsNewRoute
+  AccountsIndexRoute: typeof AccountsIndexRoute
+  BillsIndexRoute: typeof BillsIndexRoute
+  ExpensesIndexRoute: typeof ExpensesIndexRoute
+  JobsIndexRoute: typeof JobsIndexRoute
+  ReportsIndexRoute: typeof ReportsIndexRoute
+  SettingsIndexRoute: typeof SettingsIndexRoute
   TransportIndexRoute: typeof TransportIndexRoute
+  UsersIndexRoute: typeof UsersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -156,6 +182,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/users/': {
+      id: '/users/'
+      path: '/users'
+      fullPath: '/users/'
+      preLoaderRoute: typeof UsersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/transport/': {
       id: '/transport/'
       path: '/transport'
@@ -163,53 +196,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TransportIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/tasks/': {
-      id: '/tasks/'
-      path: '/tasks'
-      fullPath: '/tasks/'
-      preLoaderRoute: typeof TasksIndexRouteImport
+    '/settings/': {
+      id: '/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof SettingsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/shipments/': {
-      id: '/shipments/'
-      path: '/shipments'
-      fullPath: '/shipments/'
-      preLoaderRoute: typeof ShipmentsIndexRouteImport
+    '/reports/': {
+      id: '/reports/'
+      path: '/reports'
+      fullPath: '/reports/'
+      preLoaderRoute: typeof ReportsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/invoices/': {
-      id: '/invoices/'
-      path: '/invoices'
-      fullPath: '/invoices/'
-      preLoaderRoute: typeof InvoicesIndexRouteImport
+    '/jobs/': {
+      id: '/jobs/'
+      path: '/jobs'
+      fullPath: '/jobs/'
+      preLoaderRoute: typeof JobsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/documents/': {
-      id: '/documents/'
-      path: '/documents'
-      fullPath: '/documents/'
-      preLoaderRoute: typeof DocumentsIndexRouteImport
+    '/expenses/': {
+      id: '/expenses/'
+      path: '/expenses'
+      fullPath: '/expenses/'
+      preLoaderRoute: typeof ExpensesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/clients/': {
-      id: '/clients/'
-      path: '/clients'
-      fullPath: '/clients/'
-      preLoaderRoute: typeof ClientsIndexRouteImport
+    '/bills/': {
+      id: '/bills/'
+      path: '/bills'
+      fullPath: '/bills/'
+      preLoaderRoute: typeof BillsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/analytics/': {
-      id: '/analytics/'
-      path: '/analytics'
-      fullPath: '/analytics/'
-      preLoaderRoute: typeof AnalyticsIndexRouteImport
+    '/accounts/': {
+      id: '/accounts/'
+      path: '/accounts'
+      fullPath: '/accounts/'
+      preLoaderRoute: typeof AccountsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/shipments/$jobNo': {
-      id: '/shipments/$jobNo'
-      path: '/shipments/$jobNo'
-      fullPath: '/shipments/$jobNo'
-      preLoaderRoute: typeof ShipmentsJobNoRouteImport
+    '/jobs/new': {
+      id: '/jobs/new'
+      path: '/jobs/new'
+      fullPath: '/jobs/new'
+      preLoaderRoute: typeof JobsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jobs/$jobNo': {
+      id: '/jobs/$jobNo'
+      path: '/jobs/$jobNo'
+      fullPath: '/jobs/$jobNo'
+      preLoaderRoute: typeof JobsJobNoRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -217,14 +257,16 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ShipmentsJobNoRoute: ShipmentsJobNoRoute,
-  AnalyticsIndexRoute: AnalyticsIndexRoute,
-  ClientsIndexRoute: ClientsIndexRoute,
-  DocumentsIndexRoute: DocumentsIndexRoute,
-  InvoicesIndexRoute: InvoicesIndexRoute,
-  ShipmentsIndexRoute: ShipmentsIndexRoute,
-  TasksIndexRoute: TasksIndexRoute,
+  JobsJobNoRoute: JobsJobNoRoute,
+  JobsNewRoute: JobsNewRoute,
+  AccountsIndexRoute: AccountsIndexRoute,
+  BillsIndexRoute: BillsIndexRoute,
+  ExpensesIndexRoute: ExpensesIndexRoute,
+  JobsIndexRoute: JobsIndexRoute,
+  ReportsIndexRoute: ReportsIndexRoute,
+  SettingsIndexRoute: SettingsIndexRoute,
   TransportIndexRoute: TransportIndexRoute,
+  UsersIndexRoute: UsersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
