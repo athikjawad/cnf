@@ -10,7 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UsersIndexRouteImport } from './routes/users.index'
+import { Route as TransportIndexRouteImport } from './routes/transport.index'
+import { Route as SettingsIndexRouteImport } from './routes/settings.index'
+import { Route as ReportsIndexRouteImport } from './routes/reports.index'
 import { Route as JobsIndexRouteImport } from './routes/jobs.index'
+import { Route as ExpensesIndexRouteImport } from './routes/expenses.index'
+import { Route as BillsIndexRouteImport } from './routes/bills.index'
+import { Route as AccountsIndexRouteImport } from './routes/accounts.index'
 import { Route as JobsNewRouteImport } from './routes/jobs.new'
 import { Route as JobsJobNoRouteImport } from './routes/jobs.$jobNo'
 
@@ -19,9 +26,44 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UsersIndexRoute = UsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TransportIndexRoute = TransportIndexRouteImport.update({
+  id: '/transport/',
+  path: '/transport/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsIndexRoute = SettingsIndexRouteImport.update({
+  id: '/settings/',
+  path: '/settings/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsIndexRoute = ReportsIndexRouteImport.update({
+  id: '/reports/',
+  path: '/reports/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JobsIndexRoute = JobsIndexRouteImport.update({
   id: '/jobs/',
   path: '/jobs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExpensesIndexRoute = ExpensesIndexRouteImport.update({
+  id: '/expenses/',
+  path: '/expenses/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BillsIndexRoute = BillsIndexRouteImport.update({
+  id: '/bills/',
+  path: '/bills/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountsIndexRoute = AccountsIndexRouteImport.update({
+  id: '/accounts/',
+  path: '/accounts/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JobsNewRoute = JobsNewRouteImport.update({
@@ -39,34 +81,96 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/jobs/$jobNo': typeof JobsJobNoRoute
   '/jobs/new': typeof JobsNewRoute
+  '/accounts/': typeof AccountsIndexRoute
+  '/bills/': typeof BillsIndexRoute
+  '/expenses/': typeof ExpensesIndexRoute
   '/jobs/': typeof JobsIndexRoute
+  '/reports/': typeof ReportsIndexRoute
+  '/settings/': typeof SettingsIndexRoute
+  '/transport/': typeof TransportIndexRoute
+  '/users/': typeof UsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/jobs/$jobNo': typeof JobsJobNoRoute
   '/jobs/new': typeof JobsNewRoute
+  '/accounts': typeof AccountsIndexRoute
+  '/bills': typeof BillsIndexRoute
+  '/expenses': typeof ExpensesIndexRoute
   '/jobs': typeof JobsIndexRoute
+  '/reports': typeof ReportsIndexRoute
+  '/settings': typeof SettingsIndexRoute
+  '/transport': typeof TransportIndexRoute
+  '/users': typeof UsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/jobs/$jobNo': typeof JobsJobNoRoute
   '/jobs/new': typeof JobsNewRoute
+  '/accounts/': typeof AccountsIndexRoute
+  '/bills/': typeof BillsIndexRoute
+  '/expenses/': typeof ExpensesIndexRoute
   '/jobs/': typeof JobsIndexRoute
+  '/reports/': typeof ReportsIndexRoute
+  '/settings/': typeof SettingsIndexRoute
+  '/transport/': typeof TransportIndexRoute
+  '/users/': typeof UsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/jobs/$jobNo' | '/jobs/new' | '/jobs/'
+  fullPaths:
+    | '/'
+    | '/jobs/$jobNo'
+    | '/jobs/new'
+    | '/accounts/'
+    | '/bills/'
+    | '/expenses/'
+    | '/jobs/'
+    | '/reports/'
+    | '/settings/'
+    | '/transport/'
+    | '/users/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/jobs/$jobNo' | '/jobs/new' | '/jobs'
-  id: '__root__' | '/' | '/jobs/$jobNo' | '/jobs/new' | '/jobs/'
+  to:
+    | '/'
+    | '/jobs/$jobNo'
+    | '/jobs/new'
+    | '/accounts'
+    | '/bills'
+    | '/expenses'
+    | '/jobs'
+    | '/reports'
+    | '/settings'
+    | '/transport'
+    | '/users'
+  id:
+    | '__root__'
+    | '/'
+    | '/jobs/$jobNo'
+    | '/jobs/new'
+    | '/accounts/'
+    | '/bills/'
+    | '/expenses/'
+    | '/jobs/'
+    | '/reports/'
+    | '/settings/'
+    | '/transport/'
+    | '/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   JobsJobNoRoute: typeof JobsJobNoRoute
   JobsNewRoute: typeof JobsNewRoute
+  AccountsIndexRoute: typeof AccountsIndexRoute
+  BillsIndexRoute: typeof BillsIndexRoute
+  ExpensesIndexRoute: typeof ExpensesIndexRoute
   JobsIndexRoute: typeof JobsIndexRoute
+  ReportsIndexRoute: typeof ReportsIndexRoute
+  SettingsIndexRoute: typeof SettingsIndexRoute
+  TransportIndexRoute: typeof TransportIndexRoute
+  UsersIndexRoute: typeof UsersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -78,11 +182,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/users/': {
+      id: '/users/'
+      path: '/users'
+      fullPath: '/users/'
+      preLoaderRoute: typeof UsersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/transport/': {
+      id: '/transport/'
+      path: '/transport'
+      fullPath: '/transport/'
+      preLoaderRoute: typeof TransportIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings/': {
+      id: '/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof SettingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports/': {
+      id: '/reports/'
+      path: '/reports'
+      fullPath: '/reports/'
+      preLoaderRoute: typeof ReportsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/jobs/': {
       id: '/jobs/'
       path: '/jobs'
       fullPath: '/jobs/'
       preLoaderRoute: typeof JobsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/expenses/': {
+      id: '/expenses/'
+      path: '/expenses'
+      fullPath: '/expenses/'
+      preLoaderRoute: typeof ExpensesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bills/': {
+      id: '/bills/'
+      path: '/bills'
+      fullPath: '/bills/'
+      preLoaderRoute: typeof BillsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounts/': {
+      id: '/accounts/'
+      path: '/accounts'
+      fullPath: '/accounts/'
+      preLoaderRoute: typeof AccountsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jobs/new': {
@@ -106,7 +259,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   JobsJobNoRoute: JobsJobNoRoute,
   JobsNewRoute: JobsNewRoute,
+  AccountsIndexRoute: AccountsIndexRoute,
+  BillsIndexRoute: BillsIndexRoute,
+  ExpensesIndexRoute: ExpensesIndexRoute,
   JobsIndexRoute: JobsIndexRoute,
+  ReportsIndexRoute: ReportsIndexRoute,
+  SettingsIndexRoute: SettingsIndexRoute,
+  TransportIndexRoute: TransportIndexRoute,
+  UsersIndexRoute: UsersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
