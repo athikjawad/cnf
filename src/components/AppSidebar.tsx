@@ -9,6 +9,7 @@ import {
   Users,
   Settings,
   Package,
+  UserSquare2,
 } from "lucide-react";
 import {
   Sidebar,
@@ -32,11 +33,15 @@ interface Item {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-const CORE: Item[] = [
+const CNF: Item[] = [
   { key: "jobs", title: "Jobs", url: "/jobs", icon: Briefcase },
   { key: "expenses", title: "Expenses", url: "/expenses", icon: Receipt },
   { key: "bills", title: "Bills", url: "/bills", icon: FileText },
   { key: "transport", title: "Transport", url: "/transport", icon: Truck },
+];
+
+const CLIENTS: Item[] = [
+  { key: "clients", title: "Party Information", url: "/clients/parties", icon: UserSquare2 },
 ];
 
 const FINANCE: Item[] = [
@@ -106,7 +111,8 @@ export function AppSidebar() {
         </Link>
       </SidebarHeader>
       <SidebarContent>
-        {renderGroup("Core", CORE)}
+        {renderGroup("C&F", CNF)}
+        {renderGroup("Clients", CLIENTS)}
         {renderGroup("Finance", FINANCE)}
         {renderGroup("Admin", ADMIN)}
       </SidebarContent>

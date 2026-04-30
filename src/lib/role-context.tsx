@@ -17,16 +17,17 @@ export type ModuleKey =
   | "expenses"
   | "bills"
   | "transport"
+  | "clients"
   | "accounts"
   | "reports"
   | "users"
   | "settings";
 
 export const MODULE_PERMISSIONS: Record<Role, ModuleKey[]> = {
-  "Super Admin": ["jobs", "expenses", "bills", "transport", "accounts", "reports", "users", "settings"],
-  Manager: ["jobs", "expenses", "bills", "transport", "accounts", "reports"],
-  Operations: ["jobs", "expenses", "transport"],
-  Accounts: ["expenses", "bills", "accounts", "reports"],
+  "Super Admin": ["jobs", "expenses", "bills", "transport", "clients", "accounts", "reports", "users", "settings"],
+  Manager: ["jobs", "expenses", "bills", "transport", "clients", "accounts", "reports"],
+  Operations: ["jobs", "expenses", "transport", "clients"],
+  Accounts: ["expenses", "bills", "clients", "accounts", "reports"],
 };
 
 interface RoleCtx {
