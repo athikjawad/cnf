@@ -20,6 +20,7 @@ import { Route as BillsIndexRouteImport } from './routes/bills.index'
 import { Route as AccountsIndexRouteImport } from './routes/accounts.index'
 import { Route as JobsNewRouteImport } from './routes/jobs.new'
 import { Route as JobsJobNoRouteImport } from './routes/jobs.$jobNo'
+import { Route as ClientsPartiesRouteImport } from './routes/clients.parties'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -76,9 +77,15 @@ const JobsJobNoRoute = JobsJobNoRouteImport.update({
   path: '/jobs/$jobNo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClientsPartiesRoute = ClientsPartiesRouteImport.update({
+  id: '/clients/parties',
+  path: '/clients/parties',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/clients/parties': typeof ClientsPartiesRoute
   '/jobs/$jobNo': typeof JobsJobNoRoute
   '/jobs/new': typeof JobsNewRoute
   '/accounts/': typeof AccountsIndexRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/clients/parties': typeof ClientsPartiesRoute
   '/jobs/$jobNo': typeof JobsJobNoRoute
   '/jobs/new': typeof JobsNewRoute
   '/accounts': typeof AccountsIndexRoute
@@ -106,6 +114,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/clients/parties': typeof ClientsPartiesRoute
   '/jobs/$jobNo': typeof JobsJobNoRoute
   '/jobs/new': typeof JobsNewRoute
   '/accounts/': typeof AccountsIndexRoute
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/clients/parties'
     | '/jobs/$jobNo'
     | '/jobs/new'
     | '/accounts/'
@@ -134,6 +144,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/clients/parties'
     | '/jobs/$jobNo'
     | '/jobs/new'
     | '/accounts'
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/clients/parties'
     | '/jobs/$jobNo'
     | '/jobs/new'
     | '/accounts/'
@@ -161,6 +173,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ClientsPartiesRoute: typeof ClientsPartiesRoute
   JobsJobNoRoute: typeof JobsJobNoRoute
   JobsNewRoute: typeof JobsNewRoute
   AccountsIndexRoute: typeof AccountsIndexRoute
@@ -252,11 +265,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JobsJobNoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/clients/parties': {
+      id: '/clients/parties'
+      path: '/clients/parties'
+      fullPath: '/clients/parties'
+      preLoaderRoute: typeof ClientsPartiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ClientsPartiesRoute: ClientsPartiesRoute,
   JobsJobNoRoute: JobsJobNoRoute,
   JobsNewRoute: JobsNewRoute,
   AccountsIndexRoute: AccountsIndexRoute,
