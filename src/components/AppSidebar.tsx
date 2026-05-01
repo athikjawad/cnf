@@ -10,6 +10,8 @@ import {
   Settings,
   Package,
   UserSquare2,
+  FileBarChart,
+  ListChecks,
 } from "lucide-react";
 import {
   Sidebar,
@@ -37,10 +39,12 @@ const CNF: Item[] = [
   { key: "jobs", title: "Jobs", url: "/jobs", icon: Briefcase },
   { key: "expenses", title: "Expenses", url: "/expenses", icon: Receipt },
   { key: "bills", title: "Bills", url: "/bills", icon: FileText },
+  { key: "reports", title: "Reports", url: "/cnf-reports", icon: FileBarChart },
   { key: "transport", title: "Transport", url: "/transport", icon: Truck },
 ];
 
 const CLIENTS: Item[] = [
+  { key: "clients", title: "All Party Information", url: "/clients", icon: ListChecks },
   { key: "clients", title: "Party Information", url: "/clients/parties", icon: UserSquare2 },
 ];
 
