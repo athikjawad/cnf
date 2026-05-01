@@ -138,6 +138,7 @@ function JobsList() {
                 <TableHead>Reg ID</TableHead>
                 <TableHead>Station</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Last Update</TableHead>
                 <TableHead className="text-right">Completion</TableHead>
               </TableRow>
             </TableHeader>
