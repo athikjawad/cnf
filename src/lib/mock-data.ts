@@ -76,6 +76,7 @@ export interface Job {
   commission: number;
   // assignment
   assignedTo: string;
+  lastUpdate: string; // ISO date of last modification
 }
 
 export const parties: Party[] = [
