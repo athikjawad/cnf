@@ -199,6 +199,7 @@ export const jobs: Job[] = [
     portCharge: "Pending",
     commission: 25000,
     assignedTo: "Nadia Islam",
+    lastUpdate: daysAgo(0),
   },
   {
     jobNo: "1346",
@@ -235,6 +236,7 @@ export const jobs: Job[] = [
     portCharge: "NIL",
     commission: 18000,
     assignedTo: "Nadia Islam",
+    lastUpdate: daysAgo(1),
   },
   {
     jobNo: "1347",
@@ -276,6 +278,7 @@ export const jobs: Job[] = [
     portCharge: "Paid",
     commission: 32000,
     assignedTo: "Nadia Islam",
+    lastUpdate: daysAgo(2),
   },
   {
     jobNo: "1348",
@@ -310,6 +313,7 @@ export const jobs: Job[] = [
     portCharge: "Pending",
     commission: 15000,
     assignedTo: "Nadia Islam",
+    lastUpdate: daysAgo(4),
   },
   {
     jobNo: "1342",
@@ -350,6 +354,7 @@ export const jobs: Job[] = [
     portCharge: "Paid",
     commission: 28000,
     assignedTo: "Nadia Islam",
+    lastUpdate: daysAgo(15),
   },
 ];
 
