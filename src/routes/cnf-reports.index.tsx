@@ -47,21 +47,21 @@ function CnFReports() {
         }
       />
 
-      <Tabs defaultValue="expense" className="space-y-4">
+      <Tabs defaultValue="job" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="expense">
-            <FileBarChart className="mr-2 h-4 w-4" /> Expense
-          </TabsTrigger>
           <TabsTrigger value="job">
             <FileBarChart className="mr-2 h-4 w-4" /> Job
+          </TabsTrigger>
+          <TabsTrigger value="expense">
+            <FileBarChart className="mr-2 h-4 w-4" /> Expense
           </TabsTrigger>
           <TabsTrigger value="status">
             <FileBarChart className="mr-2 h-4 w-4" /> Status Wise
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="expense"><ExpenseReports /></TabsContent>
         <TabsContent value="job"><JobReports /></TabsContent>
+        <TabsContent value="expense"><ExpenseReports /></TabsContent>
         <TabsContent value="status"><StatusReports /></TabsContent>
       </Tabs>
     </div>
