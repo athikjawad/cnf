@@ -16,6 +16,8 @@ import { Route as SettingsIndexRouteImport } from './routes/settings.index'
 import { Route as ReportsIndexRouteImport } from './routes/reports.index'
 import { Route as JobsIndexRouteImport } from './routes/jobs.index'
 import { Route as ExpensesIndexRouteImport } from './routes/expenses.index'
+import { Route as CnfReportsIndexRouteImport } from './routes/cnf-reports.index'
+import { Route as ClientsIndexRouteImport } from './routes/clients.index'
 import { Route as BillsIndexRouteImport } from './routes/bills.index'
 import { Route as AccountsIndexRouteImport } from './routes/accounts.index'
 import { Route as JobsNewRouteImport } from './routes/jobs.new'
@@ -57,6 +59,16 @@ const ExpensesIndexRoute = ExpensesIndexRouteImport.update({
   path: '/expenses/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CnfReportsIndexRoute = CnfReportsIndexRouteImport.update({
+  id: '/cnf-reports/',
+  path: '/cnf-reports/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClientsIndexRoute = ClientsIndexRouteImport.update({
+  id: '/clients/',
+  path: '/clients/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BillsIndexRoute = BillsIndexRouteImport.update({
   id: '/bills/',
   path: '/bills/',
@@ -90,6 +102,8 @@ export interface FileRoutesByFullPath {
   '/jobs/new': typeof JobsNewRoute
   '/accounts/': typeof AccountsIndexRoute
   '/bills/': typeof BillsIndexRoute
+  '/clients/': typeof ClientsIndexRoute
+  '/cnf-reports/': typeof CnfReportsIndexRoute
   '/expenses/': typeof ExpensesIndexRoute
   '/jobs/': typeof JobsIndexRoute
   '/reports/': typeof ReportsIndexRoute
@@ -104,6 +118,8 @@ export interface FileRoutesByTo {
   '/jobs/new': typeof JobsNewRoute
   '/accounts': typeof AccountsIndexRoute
   '/bills': typeof BillsIndexRoute
+  '/clients': typeof ClientsIndexRoute
+  '/cnf-reports': typeof CnfReportsIndexRoute
   '/expenses': typeof ExpensesIndexRoute
   '/jobs': typeof JobsIndexRoute
   '/reports': typeof ReportsIndexRoute
@@ -119,6 +135,8 @@ export interface FileRoutesById {
   '/jobs/new': typeof JobsNewRoute
   '/accounts/': typeof AccountsIndexRoute
   '/bills/': typeof BillsIndexRoute
+  '/clients/': typeof ClientsIndexRoute
+  '/cnf-reports/': typeof CnfReportsIndexRoute
   '/expenses/': typeof ExpensesIndexRoute
   '/jobs/': typeof JobsIndexRoute
   '/reports/': typeof ReportsIndexRoute
@@ -135,6 +153,8 @@ export interface FileRouteTypes {
     | '/jobs/new'
     | '/accounts/'
     | '/bills/'
+    | '/clients/'
+    | '/cnf-reports/'
     | '/expenses/'
     | '/jobs/'
     | '/reports/'
@@ -149,6 +169,8 @@ export interface FileRouteTypes {
     | '/jobs/new'
     | '/accounts'
     | '/bills'
+    | '/clients'
+    | '/cnf-reports'
     | '/expenses'
     | '/jobs'
     | '/reports'
@@ -163,6 +185,8 @@ export interface FileRouteTypes {
     | '/jobs/new'
     | '/accounts/'
     | '/bills/'
+    | '/clients/'
+    | '/cnf-reports/'
     | '/expenses/'
     | '/jobs/'
     | '/reports/'
@@ -178,6 +202,8 @@ export interface RootRouteChildren {
   JobsNewRoute: typeof JobsNewRoute
   AccountsIndexRoute: typeof AccountsIndexRoute
   BillsIndexRoute: typeof BillsIndexRoute
+  ClientsIndexRoute: typeof ClientsIndexRoute
+  CnfReportsIndexRoute: typeof CnfReportsIndexRoute
   ExpensesIndexRoute: typeof ExpensesIndexRoute
   JobsIndexRoute: typeof JobsIndexRoute
   ReportsIndexRoute: typeof ReportsIndexRoute
@@ -237,6 +263,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExpensesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cnf-reports/': {
+      id: '/cnf-reports/'
+      path: '/cnf-reports'
+      fullPath: '/cnf-reports/'
+      preLoaderRoute: typeof CnfReportsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clients/': {
+      id: '/clients/'
+      path: '/clients'
+      fullPath: '/clients/'
+      preLoaderRoute: typeof ClientsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bills/': {
       id: '/bills/'
       path: '/bills'
@@ -282,6 +322,8 @@ const rootRouteChildren: RootRouteChildren = {
   JobsNewRoute: JobsNewRoute,
   AccountsIndexRoute: AccountsIndexRoute,
   BillsIndexRoute: BillsIndexRoute,
+  ClientsIndexRoute: ClientsIndexRoute,
+  CnfReportsIndexRoute: CnfReportsIndexRoute,
   ExpensesIndexRoute: ExpensesIndexRoute,
   JobsIndexRoute: JobsIndexRoute,
   ReportsIndexRoute: ReportsIndexRoute,
