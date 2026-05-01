@@ -165,6 +165,7 @@ function JobsList() {
                   <TableCell>
                     <StatusBadge variant={statusVariant(j.status)}>{j.status}</StatusBadge>
                   </TableCell>
+                  <TableCell className="text-sm whitespace-nowrap">{fmtDate(j.lastUpdate)}</TableCell>
                   <TableCell className="text-right">
                     <div className="inline-flex items-center gap-2">
                       <div className="h-1.5 w-16 overflow-hidden rounded-full bg-muted">
