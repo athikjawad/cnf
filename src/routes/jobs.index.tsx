@@ -181,7 +181,7 @@ function JobsList() {
               ))}
               {filtered.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={8} className="py-12 text-center text-sm text-muted-foreground">
+                  <TableCell colSpan={9} className="py-12 text-center text-sm text-muted-foreground">
                     No jobs match your filters.
                   </TableCell>
                 </TableRow>
