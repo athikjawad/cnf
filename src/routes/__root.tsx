@@ -40,13 +40,20 @@ export const Route = createRootRoute({
         content:
           "SFI Platform is the operating system for Standard Freight Incorporation — manage Jobs, Expenses, Bills, Transport, Accounts and Reports for Chittagong, Benapole and HSIA operations.",
       },
-      { property: "og:title", content: "SFI Platform — C&F Operations" },
+      { property: "og:title", content: "SFI Platform — C&F Operations for Standard Freight Inc." },
       {
         property: "og:description",
         content:
           "Replace WhatsApp + Excel + paper. Run C&F operations from one calm, modern dashboard.",
       },
       { property: "og:type", content: "website" },
+      { name: "twitter:title", content: "SFI Platform — C&F Operations for Standard Freight Inc." },
+      { name: "description", content: "A C&F operations platform digitizing logistics, customs, and finance for Bangladeshi import/export businesses." },
+      { property: "og:description", content: "A C&F operations platform digitizing logistics, customs, and finance for Bangladeshi import/export businesses." },
+      { name: "twitter:description", content: "A C&F operations platform digitizing logistics, customs, and finance for Bangladeshi import/export businesses." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6fcb63ea-938c-42e3-97e9-e1868265ff00/id-preview-9473a458--71a73fee-0ffe-4b9f-96e9-6fad316ec85d.lovable.app-1777748543251.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6fcb63ea-938c-42e3-97e9-e1868265ff00/id-preview-9473a458--71a73fee-0ffe-4b9f-96e9-6fad316ec85d.lovable.app-1777748543251.png" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
