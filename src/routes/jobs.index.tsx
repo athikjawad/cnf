@@ -38,7 +38,7 @@ const REG_IDS: (RegId | "ALL")[] = [
   "LAND PORT IMPORT",
 ];
 
-type Bucket = "all" | "active" | "incomplete" | "completed" | "archived";
+type Bucket = "all" | "active" | "inactive" | "completed" | "incomplete";
 
 function JobsList() {
   const [bucket, setBucket] = useState<Bucket>("all");
@@ -48,9 +48,9 @@ function JobsList() {
   const filtered = useMemo(() => {
     return jobs.filter((j: Job) => {
       if (bucket === "active" && !["ACTIVE", "PENDING DOCS", "CLEARED"].includes(j.status)) return false;
-      if (bucket === "incomplete" && j.status !== "INCOMPLETE") return false;
+      if (bucket === "inactive" && !["HOLD", "CANCELLED"].includes(j.status)) return false;
       if (bucket === "completed" && j.status !== "COMPLETED") return false;
-      if (bucket === "archived" && j.status !== "CANCELLED") return false;
+      if (bucket === "incomplete" && j.status !== "INCOMPLETE") return false;
       if (regFilter !== "ALL" && j.regId !== regFilter) return false;
       if (q) {
         const needle = q.toLowerCase();
@@ -91,13 +91,15 @@ function JobsList() {
             <TabsTrigger value="active">
               Active ({jobs.filter((j) => ["ACTIVE", "PENDING DOCS", "CLEARED"].includes(j.status)).length})
             </TabsTrigger>
-            <TabsTrigger value="incomplete">
-              Incomplete ({jobs.filter((j) => j.status === "INCOMPLETE").length})
+            <TabsTrigger value="inactive">
+              Inactive ({jobs.filter((j) => ["HOLD", "CANCELLED"].includes(j.status)).length})
             </TabsTrigger>
             <TabsTrigger value="completed">
               Completed ({jobs.filter((j) => j.status === "COMPLETED").length})
             </TabsTrigger>
-            <TabsTrigger value="archived">Archived</TabsTrigger>
+            <TabsTrigger value="incomplete">
+              Incomplete ({jobs.filter((j) => j.status === "INCOMPLETE").length})
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
