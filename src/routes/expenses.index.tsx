@@ -5,15 +5,8 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -27,18 +20,105 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { expenses as initialExpenses, jobs, expenseHeads, fmtBDT, fmtDate, type Expense } from "@/lib/mock-data";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  expenses as initialExpenses,
+  jobs,
+  expenseHeads,
+  parties,
+  fmtBDT,
+  fmtDate,
+  type Expense,
+} from "@/lib/mock-data";
 import { useRole } from "@/lib/role-context";
-import { Plus, Check, X, Search } from "lucide-react";
+import { Plus, Check, X, Search, Trash2, ChevronsUpDown } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/expenses/")({
   component: ExpensesPage,
 });
+
+interface DraftRow {
+  id: string;
+  jobNo: string;
+  costPool: string;
+  party: string;
+  particulars: string;
+  amount: string;
+}
+
+const newRow = (): DraftRow => ({
+  id: `r${Math.random().toString(36).slice(2, 9)}`,
+  jobNo: "",
+  costPool: "",
+  party: "",
+  particulars: "",
+  amount: "",
+});
+
+function Combobox({
+  value,
+  onChange,
+  options,
+  placeholder,
+  className,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: string[];
+  placeholder: string;
+  className?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          className={cn("h-8 w-full justify-between px-2 text-xs font-normal", !value && "text-muted-foreground", className)}
+        >
+          <span className="truncate">{value || placeholder}</span>
+          <ChevronsUpDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[260px] p-0" align="start">
+        <Command>
+          <CommandInput placeholder={`Search ${placeholder.toLowerCase()}…`} className="h-9" />
+          <CommandList>
+            <CommandEmpty>No match.</CommandEmpty>
+            <CommandGroup>
+              {options.map((o) => (
+                <CommandItem
+                  key={o}
+                  value={o}
+                  onSelect={() => {
+                    onChange(o);
+                    setOpen(false);
+                  }}
+                >
+                  {o}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 function ExpensesPage() {
   const { role } = useRole();
@@ -47,13 +127,13 @@ function ExpensesPage() {
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
+  const [rows, setRows] = useState<DraftRow[]>([newRow()]);
+  const [voucherDate, setVoucherDate] = useState(new Date().toISOString().slice(0, 10));
 
-  // form
-  const [fJobNo, setFJobNo] = useState(jobs[0]?.jobNo || "");
-  const [fHead, setFHead] = useState(expenseHeads[0]);
-  const [fAmount, setFAmount] = useState("");
-  const [fDesc, setFDesc] = useState("");
-  const [fDate, setFDate] = useState(new Date().toISOString().slice(0, 10));
+  const jobOptions = useMemo(() => jobs.map((j) => j.jobNo), []);
+  const partyOptions = useMemo(() => parties.map((p) => p.name), []);
+
+  const jobMap = useMemo(() => Object.fromEntries(jobs.map((j) => [j.jobNo, j])), []);
 
   const filtered = useMemo(() => {
     return list.filter((e) => {
@@ -64,30 +144,44 @@ function ExpensesPage() {
   }, [list, filter, q]);
 
   const total = filtered.reduce((s, e) => s + e.amount, 0);
+  const draftTotal = rows.reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
+
+  const updateRow = (id: string, patch: Partial<DraftRow>) =>
+    setRows((rs) => rs.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+
+  const removeRow = (id: string) =>
+    setRows((rs) => (rs.length === 1 ? [newRow()] : rs.filter((r) => r.id !== id)));
+
+  const resetForm = () => {
+    setRows([newRow()]);
+    setVoucherDate(new Date().toISOString().slice(0, 10));
+  };
 
   const submit = () => {
-    if (!fAmount || !fJobNo) {
-      toast.error("Job No and Amount are required");
+    const valid = rows.filter((r) => r.jobNo && r.costPool && parseFloat(r.amount) > 0);
+    if (valid.length === 0) {
+      toast.error("Add at least one row with Job No, Cost Pool and Amount");
       return;
     }
-    const newE: Expense = {
-      id: `e${Date.now()}`,
-      jobNo: fJobNo,
-      expenseHead: fHead,
-      amount: parseFloat(fAmount),
-      description: fDesc,
-      date: fDate,
+    const newExpenses: Expense[] = valid.map((r, i) => ({
+      id: `e${Date.now()}-${i}`,
+      jobNo: r.jobNo,
+      expenseHead: r.costPool,
+      amount: parseFloat(r.amount),
+      description: [r.party, r.particulars].filter(Boolean).join(" — "),
+      date: voucherDate,
       status: "PENDING",
-    };
-    setList((l) => [newE, ...l]);
+    }));
+    setList((l) => [...newExpenses, ...l]);
     setOpen(false);
-    setFAmount("");
-    setFDesc("");
-    toast.success("Expense submitted for approval");
+    resetForm();
+    toast.success(`${newExpenses.length} expense${newExpenses.length > 1 ? "s" : ""} submitted`);
   };
 
   const updateStatus = (id: string, status: Expense["status"]) => {
-    setList((l) => l.map((e) => (e.id === id ? { ...e, status, approvedBy: status === "APPROVED" ? "Current User" : undefined } : e)));
+    setList((l) =>
+      l.map((e) => (e.id === id ? { ...e, status, approvedBy: status === "APPROVED" ? "Current User" : undefined } : e)),
+    );
     toast.success(`Expense ${status.toLowerCase()}`);
   };
 
@@ -98,50 +192,136 @@ function ExpensesPage() {
         description="All job expenses with approval workflow"
         crumbs={[{ label: "Expenses" }]}
         actions={
-          <Dialog open={open} onOpenChange={setOpen}>
+          <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) resetForm(); }}>
             <DialogTrigger asChild>
               <Button size="sm" className="gap-1.5"><Plus className="h-4 w-4" /> New Expense</Button>
             </DialogTrigger>
-            <DialogContent>
-              <DialogHeader><DialogTitle>Add Job Expense</DialogTitle></DialogHeader>
-              <div className="grid gap-3">
-                <div>
-                  <Label className="mb-1.5 block text-xs">Job No *</Label>
-                  <Select value={fJobNo} onValueChange={setFJobNo}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {jobs.map((j) => (
-                        <SelectItem key={j.jobNo} value={j.jobNo}>#{j.jobNo} — {j.partyName}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+            <DialogContent className="flex max-h-[90vh] w-[95vw] max-w-5xl flex-col gap-0 p-0">
+              <DialogHeader className="border-b px-6 py-4">
+                <DialogTitle>New Expense Voucher</DialogTitle>
+                <p className="text-xs text-muted-foreground">
+                  Add one or more expense lines. Job No drives auto-population of Year, Branch and Type.
+                </p>
+              </DialogHeader>
+
+              <div className="flex-1 overflow-y-auto px-6 py-4">
+                <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+                  <div>
+                    <Label className="mb-1.5 block text-xs">Voucher Date</Label>
+                    <Input type="date" value={voucherDate} onChange={(e) => setVoucherDate(e.target.value)} className="h-8" />
+                  </div>
                 </div>
-                <div>
-                  <Label className="mb-1.5 block text-xs">Expense Head</Label>
-                  <Select value={fHead} onValueChange={setFHead}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {expenseHeads.map((h) => <SelectItem key={h} value={h}>{h}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
+
+                <div className="overflow-hidden rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-muted/40">
+                        <TableHead className="w-10 text-center">#</TableHead>
+                        <TableHead className="w-[140px]">Job No *</TableHead>
+                        <TableHead className="w-[150px]">Type / Branch</TableHead>
+                        <TableHead className="w-[170px]">Cost Pool *</TableHead>
+                        <TableHead className="w-[180px]">Party</TableHead>
+                        <TableHead>Particulars</TableHead>
+                        <TableHead className="w-[130px] text-right">Amount (BDT) *</TableHead>
+                        <TableHead className="w-10"></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {rows.map((r, idx) => {
+                        const job = r.jobNo ? jobMap[r.jobNo] : undefined;
+                        return (
+                          <TableRow key={r.id} className="align-top">
+                            <TableCell className="pt-3 text-center text-xs text-muted-foreground">{idx + 1}</TableCell>
+                            <TableCell>
+                              <Combobox
+                                value={r.jobNo}
+                                onChange={(v) => updateRow(r.id, { jobNo: v })}
+                                options={jobOptions}
+                                placeholder="Select job"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              {job ? (
+                                <div className="flex flex-wrap gap-1 pt-1">
+                                  <Badge variant="secondary" className="text-[10px]">{job.jobYear}</Badge>
+                                  <Badge variant="secondary" className="text-[10px]">{job.jobType}</Badge>
+                                  <Badge variant="outline" className="text-[10px]">{job.regId}</Badge>
+                                </div>
+                              ) : (
+                                <span className="pl-1 text-xs text-muted-foreground">—</span>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <Combobox
+                                value={r.costPool}
+                                onChange={(v) => updateRow(r.id, { costPool: v })}
+                                options={expenseHeads}
+                                placeholder="Select head"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Combobox
+                                value={r.party}
+                                onChange={(v) => updateRow(r.id, { party: v })}
+                                options={partyOptions}
+                                placeholder="Vendor / party"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Input
+                                value={r.particulars}
+                                onChange={(e) => updateRow(r.id, { particulars: e.target.value })}
+                                placeholder="Notes…"
+                                className="h-8 text-xs"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Input
+                                type="number"
+                                value={r.amount}
+                                onChange={(e) => updateRow(r.id, { amount: e.target.value })}
+                                placeholder="0.00"
+                                className="h-8 text-right font-mono tabular-nums text-xs"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                                onClick={() => removeRow(r.id)}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
                 </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-3 gap-1.5"
+                  onClick={() => setRows((rs) => [...rs, newRow()])}
+                >
+                  <Plus className="h-3.5 w-3.5" /> Add row
+                </Button>
+              </div>
+
+              {/* Sticky footer */}
+              <div className="flex items-center justify-between border-t bg-muted/30 px-6 py-3">
                 <div>
-                  <Label className="mb-1.5 block text-xs">Amount (BDT) *</Label>
-                  <Input type="number" value={fAmount} onChange={(e) => setFAmount(e.target.value)} />
+                  <p className="text-xs text-muted-foreground">Total Amount</p>
+                  <p className="font-mono text-lg font-semibold tabular-nums">{fmtBDT(draftTotal)}</p>
                 </div>
-                <div>
-                  <Label className="mb-1.5 block text-xs">Date</Label>
-                  <Input type="date" value={fDate} onChange={(e) => setFDate(e.target.value)} />
-                </div>
-                <div>
-                  <Label className="mb-1.5 block text-xs">Description</Label>
-                  <Textarea value={fDesc} onChange={(e) => setFDesc(e.target.value)} rows={2} />
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => { setOpen(false); resetForm(); }}>Cancel</Button>
+                  <Button onClick={submit}>Submit Voucher</Button>
                 </div>
               </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-                <Button onClick={submit}>Submit</Button>
-              </DialogFooter>
             </DialogContent>
           </Dialog>
         }
