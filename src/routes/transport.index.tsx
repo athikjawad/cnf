@@ -147,7 +147,7 @@ function TransportPage() {
                 {list.filter(d => d.status === "Delivered" || d.status === "In Transit").map(d => (
                   <div key={d.id} className="flex items-center justify-between rounded-md border p-3">
                     <div>
-                      <p className="text-sm font-medium">#{d.jobNo} — {d.partyName}</p>
+                      <p className="text-sm font-medium">{fmtJobNo(d.jobNo)} — {d.partyName}</p>
                       <p className="text-xs text-muted-foreground">{d.destination}</p>
                     </div>
                     <div className="flex items-center gap-2">
