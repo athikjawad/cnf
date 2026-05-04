@@ -131,7 +131,11 @@ function ExpensesPage() {
   const [rows, setRows] = useState<DraftRow[]>([newRow()]);
   const [voucherDate, setVoucherDate] = useState(new Date().toISOString().slice(0, 10));
 
-  const jobOptions = useMemo(() => jobs.map((j) => ({ value: j.jobNo, label: fmtJobNo(j) })), []);
+  const jobOptions = useMemo(() => jobs.map((j) => fmtJobNo(j)), []);
+  const labelToJobNo = useMemo(
+    () => Object.fromEntries(jobs.map((j) => [fmtJobNo(j), j.jobNo])),
+    [],
+  );
   const partyOptions = useMemo(() => parties.map((p) => p.name), []);
 
   const jobMap = useMemo(() => Object.fromEntries(jobs.map((j) => [j.jobNo, j])), []);
