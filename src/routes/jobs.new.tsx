@@ -174,7 +174,7 @@ function NewJobWizard() {
   const prev = () => setStep((s) => Math.max(1, s - 1));
 
   const create = (alsoExpense = false) => {
-    toast.success(`Job #${form.jobNo} created successfully`);
+    toast.success(`Job ${form.jobNo}|${new Date().getFullYear()}|${jobType || "—"} created successfully`);
     if (alsoExpense) {
       navigate({ to: "/expenses" });
     } else {
