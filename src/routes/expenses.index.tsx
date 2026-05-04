@@ -239,8 +239,8 @@ function ExpensesPage() {
                             <TableCell className="pt-3 text-center text-xs text-muted-foreground">{idx + 1}</TableCell>
                             <TableCell>
                               <Combobox
-                                value={r.jobNo}
-                                onChange={(v) => updateRow(r.id, { jobNo: v })}
+                                value={r.jobNo ? (jobMap[r.jobNo] ? fmtJobNo(jobMap[r.jobNo]) : "") : ""}
+                                onChange={(v) => updateRow(r.id, { jobNo: labelToJobNo[v] ?? v })}
                                 options={jobOptions}
                                 placeholder="Select job"
                               />
