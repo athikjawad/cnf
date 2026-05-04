@@ -44,6 +44,8 @@ function JobsList() {
   const [bucket, setBucket] = useState<Bucket>("all");
   const [q, setQ] = useState("");
   const [regFilter, setRegFilter] = useState<string>("ALL");
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
   const filtered = useMemo(() => {
     return jobs.filter((j: Job) => {
