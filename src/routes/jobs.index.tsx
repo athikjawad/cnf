@@ -66,6 +66,15 @@ function JobsList() {
     });
   }, [bucket, q, regFilter]);
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  // Reset to page 1 when filters change
+  useMemo(() => {
+    setPage(1);
+  }, [bucket, q, regFilter]);
+
   return (
     <div>
       <PageHeader
