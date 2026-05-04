@@ -159,8 +159,8 @@ function Dashboard() {
                   params={{ jobNo: j.jobNo }}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-md bg-secondary text-secondary-foreground text-xs font-semibold">
-                    #{j.jobNo}
+                  <div className="flex h-9 items-center justify-center rounded-md bg-secondary px-2 text-secondary-foreground text-[10px] font-mono font-semibold whitespace-nowrap">
+                    {fmtJobNo(j)}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{j.partyName}</p>
