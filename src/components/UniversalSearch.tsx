@@ -38,7 +38,7 @@ export function UniversalSearch({
               onSelect={() => go(`/jobs/${j.jobNo}`)}
             >
               <Briefcase className="mr-2 h-4 w-4 text-primary" />
-              <span className="font-medium">#{j.jobNo}</span>
+              <span className="font-medium font-mono">{fmtJobNo(j)}</span>
               <span className="ml-2 text-muted-foreground">{j.partyName}</span>
               <span className="ml-auto text-[10px] text-muted-foreground">{j.regId}</span>
             </CommandItem>
