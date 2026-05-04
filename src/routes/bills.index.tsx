@@ -121,7 +121,7 @@ function BillsPage() {
                     <Select value={fJobNo} onValueChange={setFJobNo}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        {jobs.map((j) => <SelectItem key={j.jobNo} value={j.jobNo}>#{j.jobNo} — {j.partyName}</SelectItem>)}
+                        {jobs.map((j) => <SelectItem key={j.jobNo} value={j.jobNo}>{fmtJobNo(j)} — {j.partyName}</SelectItem>)}
                       </SelectContent>
                     </Select>
                   </div>
