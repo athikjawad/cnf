@@ -204,7 +204,7 @@ function Dashboard() {
             <div className="mt-3 space-y-2">
               {pendingExpenses.slice(0, 4).map((e) => (
                 <div key={e.id} className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">#{e.jobNo} — {e.expenseHead}</span>
+                  <span className="text-muted-foreground">{fmtJobNo(e.jobNo)} — {e.expenseHead}</span>
                   <span className="font-medium tabular-nums">{fmtBDT(e.amount)}</span>
                 </div>
               ))}
