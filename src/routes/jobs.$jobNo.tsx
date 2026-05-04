@@ -92,15 +92,6 @@ function JobWorkspace() {
             <Stat icon={FileText} label="C&F Value" value={fmtBDT(job.cfValueBdt)} />
             <Stat icon={Truck} label="Station" value={job.station} />
           </div>
-          <div className="mt-4">
-            <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
-              <span>Completion</span>
-              <span className="tabular-nums">{job.completion}%</span>
-            </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-              <div className="h-full bg-primary transition-all" style={{ width: `${job.completion}%` }} />
-            </div>
-          </div>
         </Card>
 
         <Tabs value={tab} onValueChange={setTab}>
