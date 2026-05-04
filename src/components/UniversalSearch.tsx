@@ -8,7 +8,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { jobs, bills, expenses, vouchers } from "@/lib/mock-data";
+import { jobs, bills, expenses, vouchers, fmtJobNo } from "@/lib/mock-data";
 import { Briefcase, FileText, Receipt, Wallet } from "lucide-react";
 
 export function UniversalSearch({
