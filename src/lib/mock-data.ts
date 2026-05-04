@@ -493,6 +493,15 @@ export const chartOfAccounts = [
 export const fmtBDT = (n: number) =>
   "৳" + n.toLocaleString("en-BD", { maximumFractionDigits: 0 });
 
+export const fmtJobNo = (jobNoOrJob: string | { jobNo: string; jobYear?: number; jobType?: string }) => {
+  if (typeof jobNoOrJob === "string") {
+    const j = jobs.find((x) => x.jobNo === jobNoOrJob);
+    if (!j) return jobNoOrJob;
+    return `${j.jobNo}|${j.jobYear}|${j.jobType}`;
+  }
+  return `${jobNoOrJob.jobNo}|${jobNoOrJob.jobYear ?? ""}|${jobNoOrJob.jobType ?? ""}`;
+};
+
 export const fmtDate = (iso: string) => {
   if (!iso) return "—";
   const d = new Date(iso);

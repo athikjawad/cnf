@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { vouchers, chartOfAccounts, jobs, fmtBDT, fmtDate } from "@/lib/mock-data";
+import { vouchers, chartOfAccounts, jobs, fmtBDT, fmtDate, fmtJobNo } from "@/lib/mock-data";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
@@ -111,7 +111,7 @@ function AccountsPage() {
                   <Select value={jobNo} onValueChange={setJobNo}>
                     <SelectTrigger><SelectValue placeholder="Link to job…" /></SelectTrigger>
                     <SelectContent>
-                      {jobs.map((j) => <SelectItem key={j.jobNo} value={j.jobNo}>#{j.jobNo} — {j.partyName}</SelectItem>)}
+                      {jobs.map((j) => <SelectItem key={j.jobNo} value={j.jobNo}>{fmtJobNo(j)} — {j.partyName}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
@@ -162,7 +162,7 @@ function AccountsPage() {
                       <TableCell className="text-sm">{v.debitAccount}</TableCell>
                       <TableCell className="text-sm">{v.creditAccount}</TableCell>
                       <TableCell className="text-sm text-muted-foreground">{v.narration}</TableCell>
-                      <TableCell className="font-mono text-sm">{v.jobNo ? `#${v.jobNo}` : "—"}</TableCell>
+                      <TableCell className="font-mono text-sm">{v.jobNo ? fmtJobNo(v.jobNo) : "—"}</TableCell>
                       <TableCell className="text-right font-mono">{fmtBDT(v.amount)}</TableCell>
                     </TableRow>
                   ))}

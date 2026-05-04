@@ -39,6 +39,7 @@ import {
   parties,
   fmtBDT,
   fmtDate,
+  fmtJobNo,
   type Expense,
 } from "@/lib/mock-data";
 import { useRole } from "@/lib/role-context";
@@ -130,7 +131,11 @@ function ExpensesPage() {
   const [rows, setRows] = useState<DraftRow[]>([newRow()]);
   const [voucherDate, setVoucherDate] = useState(new Date().toISOString().slice(0, 10));
 
-  const jobOptions = useMemo(() => jobs.map((j) => j.jobNo), []);
+  const jobOptions = useMemo(() => jobs.map((j) => fmtJobNo(j)), []);
+  const labelToJobNo = useMemo(
+    () => Object.fromEntries(jobs.map((j) => [fmtJobNo(j), j.jobNo])),
+    [],
+  );
   const partyOptions = useMemo(() => parties.map((p) => p.name), []);
 
   const jobMap = useMemo(() => Object.fromEntries(jobs.map((j) => [j.jobNo, j])), []);
@@ -234,8 +239,8 @@ function ExpensesPage() {
                             <TableCell className="pt-3 text-center text-xs text-muted-foreground">{idx + 1}</TableCell>
                             <TableCell>
                               <Combobox
-                                value={r.jobNo}
-                                onChange={(v) => updateRow(r.id, { jobNo: v })}
+                                value={r.jobNo ? (jobMap[r.jobNo] ? fmtJobNo(jobMap[r.jobNo]) : "") : ""}
+                                onChange={(v) => updateRow(r.id, { jobNo: labelToJobNo[v] ?? v })}
                                 options={jobOptions}
                                 placeholder="Select job"
                               />
@@ -368,7 +373,7 @@ function ExpensesPage() {
             <TableBody>
               {filtered.map((e) => (
                 <TableRow key={e.id}>
-                  <TableCell className="font-mono">#{e.jobNo}</TableCell>
+                  <TableCell className="font-mono whitespace-nowrap">{fmtJobNo(e.jobNo)}</TableCell>
                   <TableCell className="font-medium">{e.expenseHead}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{e.description}</TableCell>
                   <TableCell className="text-sm">{fmtDate(e.date)}</TableCell>

@@ -31,7 +31,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { bills as initialBills, jobs, fmtBDT, fmtDate, type Bill } from "@/lib/mock-data";
+import { bills as initialBills, jobs, fmtBDT, fmtDate, fmtJobNo, type Bill } from "@/lib/mock-data";
 import { Plus, Send } from "lucide-react";
 import { toast } from "sonner";
 
@@ -121,7 +121,7 @@ function BillsPage() {
                     <Select value={fJobNo} onValueChange={setFJobNo}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        {jobs.map((j) => <SelectItem key={j.jobNo} value={j.jobNo}>#{j.jobNo} — {j.partyName}</SelectItem>)}
+                        {jobs.map((j) => <SelectItem key={j.jobNo} value={j.jobNo}>{fmtJobNo(j)} — {j.partyName}</SelectItem>)}
                       </SelectContent>
                     </Select>
                   </div>
@@ -194,7 +194,7 @@ function BillsPage() {
                       />
                     </TableCell>
                     <TableCell className="font-mono">{b.billNo}</TableCell>
-                    <TableCell className="font-mono">#{b.jobNo}</TableCell>
+                    <TableCell className="font-mono whitespace-nowrap">{fmtJobNo(b.jobNo)}</TableCell>
                     <TableCell>{b.partyName}</TableCell>
                     <TableCell className="text-sm">{fmtDate(b.billDate)}</TableCell>
                     <TableCell className="text-sm">

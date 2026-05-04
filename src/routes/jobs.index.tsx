@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -21,8 +21,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { jobs, fmtDate, statusVariant, type Job, type RegId } from "@/lib/mock-data";
-import { Plus, Search, Filter, Download } from "lucide-react";
+import { jobs, fmtDate, fmtJobNo, statusVariant, type Job, type RegId } from "@/lib/mock-data";
+import { Plus, Search, Filter, Download, ChevronLeft, ChevronRight } from "lucide-react";
 
 export const Route = createFileRoute("/jobs/")({
   component: JobsList,
@@ -44,6 +44,8 @@ function JobsList() {
   const [bucket, setBucket] = useState<Bucket>("all");
   const [q, setQ] = useState("");
   const [regFilter, setRegFilter] = useState<string>("ALL");
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
   const filtered = useMemo(() => {
     return jobs.filter((j: Job) => {
@@ -62,6 +64,15 @@ function JobsList() {
       }
       return true;
     });
+  }, [bucket, q, regFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setPage(1);
   }, [bucket, q, regFilter]);
 
   return (
@@ -131,7 +142,7 @@ function JobsList() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[90px]">Job No</TableHead>
+                <TableHead className="w-[170px]">Job No</TableHead>
                 <TableHead>Created Date</TableHead>
                 <TableHead>Last Update</TableHead>
                 <TableHead>Party Name</TableHead>
@@ -143,11 +154,11 @@ function JobsList() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((j) => (
+              {paginated.map((j) => (
                 <TableRow key={j.jobNo} className="cursor-pointer">
-                  <TableCell className="font-mono font-medium">
+                  <TableCell className="font-mono font-medium whitespace-nowrap">
                     <Link to="/jobs/$jobNo" params={{ jobNo: j.jobNo }} className="text-primary hover:underline">
-                      #{j.jobNo}
+                      {fmtJobNo(j)}
                     </Link>
                   </TableCell>
                   <TableCell className="text-sm whitespace-nowrap">{fmtDate(j.jobDate)}</TableCell>
@@ -190,6 +201,37 @@ function JobsList() {
               )}
             </TableBody>
           </Table>
+
+          {filtered.length > 0 && (
+            <div className="flex items-center justify-between gap-2 border-t bg-muted/30 px-4 py-3 text-sm">
+              <div className="text-muted-foreground">
+                Showing {(currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, filtered.length)} of {filtered.length}
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 gap-1"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="h-4 w-4" /> Previous
+                </Button>
+                <span className="text-muted-foreground">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 gap-1"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
         </Card>
       </div>
     </div>

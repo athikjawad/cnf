@@ -12,6 +12,7 @@ import {
   activityLogs,
   fmtBDT,
   fmtDate,
+  fmtJobNo,
   statusVariant,
 } from "@/lib/mock-data";
 import {
@@ -158,8 +159,8 @@ function Dashboard() {
                   params={{ jobNo: j.jobNo }}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-md bg-secondary text-secondary-foreground text-xs font-semibold">
-                    #{j.jobNo}
+                  <div className="flex h-9 items-center justify-center rounded-md bg-secondary px-2 text-secondary-foreground text-[10px] font-mono font-semibold whitespace-nowrap">
+                    {fmtJobNo(j)}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{j.partyName}</p>
@@ -182,7 +183,7 @@ function Dashboard() {
                 <li key={a.id} className="px-4 py-3 text-sm">
                   <p className="font-medium">{a.action}</p>
                   <p className="text-xs text-muted-foreground">
-                    {a.user} · {a.recordType} #{a.recordId}
+                    {a.user} · {a.recordType} {a.recordType === "Job" ? fmtJobNo(a.recordId) : `#${a.recordId}`}
                   </p>
                   <p className="mt-0.5 text-[10px] text-muted-foreground">
                     {fmtDate(a.timestamp)} · {new Date(a.timestamp).toLocaleTimeString()}
@@ -203,7 +204,7 @@ function Dashboard() {
             <div className="mt-3 space-y-2">
               {pendingExpenses.slice(0, 4).map((e) => (
                 <div key={e.id} className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">#{e.jobNo} — {e.expenseHead}</span>
+                  <span className="text-muted-foreground">{fmtJobNo(e.jobNo)} — {e.expenseHead}</span>
                   <span className="font-medium tabular-nums">{fmtBDT(e.amount)}</span>
                 </div>
               ))}
@@ -221,7 +222,7 @@ function Dashboard() {
             <div className="mt-3 space-y-2">
               {dispatches.map((d) => (
                 <div key={d.id} className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">#{d.jobNo}</span>
+                  <span className="text-muted-foreground">{fmtJobNo(d.jobNo)}</span>
                   <StatusBadge variant={d.status === "Delivered" ? "success" : d.status === "In Transit" ? "info" : "warn"}>
                     {d.status}
                   </StatusBadge>

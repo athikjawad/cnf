@@ -8,7 +8,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { jobs, bills, expenses, vouchers } from "@/lib/mock-data";
+import { jobs, bills, expenses, vouchers, fmtJobNo } from "@/lib/mock-data";
 import { Briefcase, FileText, Receipt, Wallet } from "lucide-react";
 
 export function UniversalSearch({
@@ -38,7 +38,7 @@ export function UniversalSearch({
               onSelect={() => go(`/jobs/${j.jobNo}`)}
             >
               <Briefcase className="mr-2 h-4 w-4 text-primary" />
-              <span className="font-medium">#{j.jobNo}</span>
+              <span className="font-medium font-mono">{fmtJobNo(j)}</span>
               <span className="ml-2 text-muted-foreground">{j.partyName}</span>
               <span className="ml-auto text-[10px] text-muted-foreground">{j.regId}</span>
             </CommandItem>
@@ -68,7 +68,7 @@ export function UniversalSearch({
             >
               <Receipt className="mr-2 h-4 w-4 text-warning" />
               {e.expenseHead}
-              <span className="ml-2 text-muted-foreground">Job #{e.jobNo}</span>
+              <span className="ml-2 text-muted-foreground">Job {fmtJobNo(e.jobNo)}</span>
             </CommandItem>
           ))}
         </CommandGroup>

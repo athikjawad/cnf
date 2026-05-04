@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { StatusBadge } from "@/components/StatusBadge";
-import { dispatches as initial, transportVendors, fmtBDT, type Dispatch, type DispatchStatus } from "@/lib/mock-data";
+import { dispatches as initial, transportVendors, fmtBDT, fmtJobNo, type Dispatch, type DispatchStatus } from "@/lib/mock-data";
 import { Truck, Phone, Upload, GripVertical } from "lucide-react";
 import { toast } from "sonner";
 
@@ -80,7 +80,7 @@ function TransportPage() {
                           <div className="flex items-start gap-2">
                             <GripVertical className="mt-0.5 h-3 w-3 text-muted-foreground" />
                             <div className="min-w-0 flex-1">
-                              <p className="font-mono text-xs font-medium text-primary">#{d.jobNo}</p>
+                              <p className="font-mono text-xs font-medium text-primary">{fmtJobNo(d.jobNo)}</p>
                               <p className="mt-0.5 truncate text-sm font-medium">{d.partyName}</p>
                               <p className="truncate text-xs text-muted-foreground">→ {d.destination}</p>
                               <p className="mt-1 truncate text-xs text-muted-foreground">{d.transportName}</p>
@@ -147,7 +147,7 @@ function TransportPage() {
                 {list.filter(d => d.status === "Delivered" || d.status === "In Transit").map(d => (
                   <div key={d.id} className="flex items-center justify-between rounded-md border p-3">
                     <div>
-                      <p className="text-sm font-medium">#{d.jobNo} — {d.partyName}</p>
+                      <p className="text-sm font-medium">{fmtJobNo(d.jobNo)} — {d.partyName}</p>
                       <p className="text-xs text-muted-foreground">{d.destination}</p>
                     </div>
                     <div className="flex items-center gap-2">
