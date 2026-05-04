@@ -194,7 +194,7 @@ function BillsPage() {
                       />
                     </TableCell>
                     <TableCell className="font-mono">{b.billNo}</TableCell>
-                    <TableCell className="font-mono">#{b.jobNo}</TableCell>
+                    <TableCell className="font-mono whitespace-nowrap">{fmtJobNo(b.jobNo)}</TableCell>
                     <TableCell>{b.partyName}</TableCell>
                     <TableCell className="text-sm">{fmtDate(b.billDate)}</TableCell>
                     <TableCell className="text-sm">
