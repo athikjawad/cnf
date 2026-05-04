@@ -111,7 +111,7 @@ function AccountsPage() {
                   <Select value={jobNo} onValueChange={setJobNo}>
                     <SelectTrigger><SelectValue placeholder="Link to job…" /></SelectTrigger>
                     <SelectContent>
-                      {jobs.map((j) => <SelectItem key={j.jobNo} value={j.jobNo}>#{j.jobNo} — {j.partyName}</SelectItem>)}
+                      {jobs.map((j) => <SelectItem key={j.jobNo} value={j.jobNo}>{fmtJobNo(j)} — {j.partyName}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
