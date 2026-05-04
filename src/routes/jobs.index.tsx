@@ -71,7 +71,7 @@ function JobsList() {
   const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   // Reset to page 1 when filters change
-  useMemo(() => {
+  useEffect(() => {
     setPage(1);
   }, [bucket, q, regFilter]);
 
