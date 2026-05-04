@@ -21,8 +21,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { jobs, fmtDate, statusVariant, type Job, type RegId } from "@/lib/mock-data";
-import { Plus, Search, Filter, Download } from "lucide-react";
+import { jobs, fmtDate, fmtJobNo, statusVariant, type Job, type RegId } from "@/lib/mock-data";
+import { Plus, Search, Filter, Download, ChevronLeft, ChevronRight } from "lucide-react";
 
 export const Route = createFileRoute("/jobs/")({
   component: JobsList,
