@@ -369,7 +369,7 @@ function ExpensesPage() {
             <TableBody>
               {filtered.map((e) => (
                 <TableRow key={e.id}>
-                  <TableCell className="font-mono">#{e.jobNo}</TableCell>
+                  <TableCell className="font-mono whitespace-nowrap">{fmtJobNo(e.jobNo)}</TableCell>
                   <TableCell className="font-medium">{e.expenseHead}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{e.description}</TableCell>
                   <TableCell className="text-sm">{fmtDate(e.date)}</TableCell>
