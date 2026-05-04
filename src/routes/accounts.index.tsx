@@ -162,7 +162,7 @@ function AccountsPage() {
                       <TableCell className="text-sm">{v.debitAccount}</TableCell>
                       <TableCell className="text-sm">{v.creditAccount}</TableCell>
                       <TableCell className="text-sm text-muted-foreground">{v.narration}</TableCell>
-                      <TableCell className="font-mono text-sm">{v.jobNo ? `#${v.jobNo}` : "—"}</TableCell>
+                      <TableCell className="font-mono text-sm">{v.jobNo ? fmtJobNo(v.jobNo) : "—"}</TableCell>
                       <TableCell className="text-right font-mono">{fmtBDT(v.amount)}</TableCell>
                     </TableRow>
                   ))}
