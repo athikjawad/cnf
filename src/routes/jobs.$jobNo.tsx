@@ -71,9 +71,9 @@ function JobWorkspace() {
   return (
     <div>
       <PageHeader
-        title={`Job #${job.jobNo}`}
+        title={`Job ${fmtJobNo(job)}`}
         description={`${job.regId} · ${job.partyName}`}
-        crumbs={[{ label: "Jobs", href: "/jobs" }, { label: `#${job.jobNo}` }]}
+        crumbs={[{ label: "Jobs", href: "/jobs" }, { label: fmtJobNo(job) }]}
         actions={
           <>
             <StatusBadge variant={statusVariant(job.status)}>{job.status}</StatusBadge>
