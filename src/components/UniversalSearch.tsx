@@ -68,7 +68,7 @@ export function UniversalSearch({
             >
               <Receipt className="mr-2 h-4 w-4 text-warning" />
               {e.expenseHead}
-              <span className="ml-2 text-muted-foreground">Job #{e.jobNo}</span>
+              <span className="ml-2 text-muted-foreground">Job {fmtJobNo(e.jobNo)}</span>
             </CommandItem>
           ))}
         </CommandGroup>
