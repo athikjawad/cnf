@@ -68,7 +68,6 @@ function JobsList() {
     <div>
       <PageHeader
         title="Jobs"
-        description="Master list of all C&F jobs — atomic unit of the platform"
         crumbs={[{ label: "Jobs" }]}
         actions={
           <>
@@ -127,21 +126,20 @@ function JobsList() {
                 ))}
               </SelectContent>
             </Select>
-            <span className="text-xs text-muted-foreground">{filtered.length} jobs</span>
           </div>
 
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[90px]">Job No</TableHead>
-                <TableHead>Job Date</TableHead>
+                <TableHead>Created Date</TableHead>
+                <TableHead>Last Update</TableHead>
                 <TableHead>Party Name</TableHead>
                 <TableHead>Concern</TableHead>
                 <TableHead>Reg ID</TableHead>
                 <TableHead>Station</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Last Update</TableHead>
-                <TableHead className="text-right">Completion</TableHead>
+                <TableHead>Completion Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -152,7 +150,8 @@ function JobsList() {
                       #{j.jobNo}
                     </Link>
                   </TableCell>
-                  <TableCell className="text-sm">{fmtDate(j.jobDate)}</TableCell>
+                  <TableCell className="text-sm whitespace-nowrap">{fmtDate(j.jobDate)}</TableCell>
+                  <TableCell className="text-sm whitespace-nowrap">{fmtDate(j.lastUpdate)}</TableCell>
                   <TableCell>
                     <div className="font-medium">{j.partyName}</div>
                     <div className="text-xs text-muted-foreground">{j.consigneeName}</div>
@@ -167,17 +166,18 @@ function JobsList() {
                   <TableCell>
                     <StatusBadge variant={statusVariant(j.status)}>{j.status}</StatusBadge>
                   </TableCell>
-                  <TableCell className="text-sm whitespace-nowrap">{fmtDate(j.lastUpdate)}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="inline-flex items-center gap-2">
-                      <div className="h-1.5 w-16 overflow-hidden rounded-full bg-muted">
-                        <div
-                          className="h-full bg-primary"
-                          style={{ width: `${j.completion}%` }}
-                        />
-                      </div>
-                      <span className="text-xs tabular-nums">{j.completion}%</span>
-                    </div>
+                  <TableCell>
+                    <StatusBadge
+                      variant={
+                        j.status === "COMPLETED"
+                          ? "success"
+                          : j.status === "INCOMPLETE"
+                            ? "danger"
+                            : "warn"
+                      }
+                    >
+                      {j.status === "COMPLETED" ? "COMPLETED" : "INCOMPLETE"}
+                    </StatusBadge>
                   </TableCell>
                 </TableRow>
               ))}
