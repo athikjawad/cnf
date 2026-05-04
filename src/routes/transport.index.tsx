@@ -80,7 +80,7 @@ function TransportPage() {
                           <div className="flex items-start gap-2">
                             <GripVertical className="mt-0.5 h-3 w-3 text-muted-foreground" />
                             <div className="min-w-0 flex-1">
-                              <p className="font-mono text-xs font-medium text-primary">#{d.jobNo}</p>
+                              <p className="font-mono text-xs font-medium text-primary">{fmtJobNo(d.jobNo)}</p>
                               <p className="mt-0.5 truncate text-sm font-medium">{d.partyName}</p>
                               <p className="truncate text-xs text-muted-foreground">→ {d.destination}</p>
                               <p className="mt-1 truncate text-xs text-muted-foreground">{d.transportName}</p>
