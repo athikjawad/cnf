@@ -183,7 +183,7 @@ function Dashboard() {
                 <li key={a.id} className="px-4 py-3 text-sm">
                   <p className="font-medium">{a.action}</p>
                   <p className="text-xs text-muted-foreground">
-                    {a.user} · {a.recordType} #{a.recordId}
+                    {a.user} · {a.recordType} {a.recordType === "Job" ? fmtJobNo(a.recordId) : `#${a.recordId}`}
                   </p>
                   <p className="mt-0.5 text-[10px] text-muted-foreground">
                     {fmtDate(a.timestamp)} · {new Date(a.timestamp).toLocaleTimeString()}
