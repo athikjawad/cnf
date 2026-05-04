@@ -222,7 +222,7 @@ function Dashboard() {
             <div className="mt-3 space-y-2">
               {dispatches.map((d) => (
                 <div key={d.id} className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">#{d.jobNo}</span>
+                  <span className="text-muted-foreground">{fmtJobNo(d.jobNo)}</span>
                   <StatusBadge variant={d.status === "Delivered" ? "success" : d.status === "In Transit" ? "info" : "warn"}>
                     {d.status}
                   </StatusBadge>
