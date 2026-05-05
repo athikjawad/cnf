@@ -96,15 +96,9 @@ const seed: PartyRecord[] = seedParties.map((p) => ({
 function PartyInformationPage() {
   const [parties, setParties] = useState<PartyRecord[]>(seed);
   const [selectedId, setSelectedId] = useState<string>(seed[0]?.id ?? "");
-  const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
 
   const selected = useMemo(() => parties.find((p) => p.id === selectedId), [parties, selectedId]);
-
-  const filtered = useMemo(
-    () => parties.filter((p) => p.name.toLowerCase().includes(search.toLowerCase())),
-    [parties, search],
-  );
 
   const updateSelected = (patch: Partial<PartyRecord>) => {
     if (!selected) return;
@@ -144,58 +138,42 @@ function PartyInformationPage() {
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
-        {/* Party list */}
+      {selected ? (
+        <div className="space-y-4">
+          <PartyForm party={selected} onChange={updateSelected} />
+          <CommissionSection party={selected} onChange={updateSelected} />
+          <ExpenseLimitSection party={selected} onChange={updateSelected} />
+        </div>
+      ) : (
         <Card>
-          <CardHeader className="pb-3">
-            <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search parties..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-8"
-              />
-            </div>
-          </CardHeader>
-          <CardContent className="px-2">
-            <div className="space-y-1 max-h-[70vh] overflow-y-auto">
-              {filtered.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => setSelectedId(p.id)}
-                  className={`w-full text-left rounded-md px-3 py-2 text-sm transition-colors ${
-                    selectedId === p.id
-                      ? "bg-primary/10 text-primary font-medium"
-                      : "hover:bg-muted"
-                  }`}
-                >
-                  <div className="truncate">{p.name}</div>
-                  <div className="text-xs text-muted-foreground truncate">{p.contact}</div>
-                </button>
-              ))}
-              {filtered.length === 0 && (
-                <p className="px-3 py-4 text-sm text-muted-foreground">No parties found</p>
-              )}
-            </div>
+          <CardContent className="p-12 text-center text-muted-foreground">
+            No party selected
           </CardContent>
         </Card>
+      )}
+    </div>
+  );
+}
 
-        {/* Detail panel */}
-        {selected ? (
-          <div className="space-y-4">
-            <PartyForm party={selected} onChange={updateSelected} />
-            <CommissionSection party={selected} onChange={updateSelected} />
-            <ExpenseLimitSection party={selected} onChange={updateSelected} />
-          </div>
-        ) : (
-          <Card>
-            <CardContent className="p-12 text-center text-muted-foreground">
-              Select a party to view details
-            </CardContent>
-          </Card>
-        )}
-      </div>
+/* --------------------- Reusable detail panel (used in side sheet) --------------------- */
+
+export function PartyDetailPanel({ party: initial }: { party: Party }) {
+  const [party, setParty] = useState<PartyRecord>(() => ({
+    ...initial,
+    email: `${initial.name.split(" ")[0].toLowerCase()}@example.com`,
+    webAddress: `www.${initial.name.split(" ")[0].toLowerCase()}.com`,
+    apName: "—",
+    apContact: "—",
+    status: "Active",
+    commissions: emptyCommission(),
+    expenseLimits: emptyExpense(),
+  }));
+  const update = (patch: Partial<PartyRecord>) => setParty((p) => ({ ...p, ...patch }));
+  return (
+    <div className="space-y-4">
+      <PartyForm party={party} onChange={update} />
+      <CommissionSection party={party} onChange={update} />
+      <ExpenseLimitSection party={party} onChange={update} />
     </div>
   );
 }
