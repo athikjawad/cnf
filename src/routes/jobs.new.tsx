@@ -243,56 +243,59 @@ function NewJobWizard() {
         </Card>
 
         {/* STEP 1 */}
-        {step === 1 && (
-          <Card className="p-6 space-y-4">
-            <h2 className="text-base font-semibold">Step 1 — Basic Information</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Company Name">
-                <Input value="SFI — Standard Freight Incorporation" disabled />
-              </Field>
-              <Field label="Reg ID *">
-                <Select value={form.regId} onValueChange={(v) => set("regId", v as RegId)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select registration type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="SEA EXPORT">SEA EXPORT</SelectItem>
-                    <SelectItem value="SEA IMPORT">SEA IMPORT</SelectItem>
-                    <SelectItem value="AIR EXPORT">AIR EXPORT</SelectItem>
-                    <SelectItem value="AIR IMPORT">AIR IMPORT</SelectItem>
-                    <SelectItem value="LAND PORT EXPORT">LAND PORT EXPORT</SelectItem>
-                    <SelectItem value="LAND PORT IMPORT">LAND PORT IMPORT</SelectItem>
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field label="Job Type (auto)">
-                <Input value={jobType} disabled />
-              </Field>
-              <Field label="Shipment Mode (auto)">
-                <Input value={shipmentMode} disabled />
-              </Field>
-              <Field label="Job Date *">
-                <Input type="date" value={form.jobDate} onChange={(e) => set("jobDate", e.target.value)} />
-              </Field>
-              <Field label="Job Year (auto)">
-                <Input value={new Date(form.jobDate).getFullYear()} disabled />
-              </Field>
-              <Field label="Job No (auto)">
-                <Input value={form.jobNo} onChange={(e) => set("jobNo", e.target.value)} />
-              </Field>
-              <Field label="Status">
-                <Select value={form.status} onValueChange={(v) => set("status", v as FormState["status"])}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ACTIVE">ACTIVE</SelectItem>
-                    <SelectItem value="HOLD">HOLD</SelectItem>
-                    <SelectItem value="CANCELLED">CANCELLED</SelectItem>
-                  </SelectContent>
-                </Select>
-              </Field>
-            </div>
-          </Card>
-        )}
+        <Card id="step-1" className="p-6 space-y-4 scroll-mt-24">
+          <h2 className="text-base font-semibold">Step 1 — Basic Information</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Company Name">
+              <Input value="SFI — Standard Freight Incorporation" disabled />
+            </Field>
+            <Field label="Reg ID *">
+              <Select value={form.regId} onValueChange={(v) => set("regId", v as RegId)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select registration type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="SEA EXPORT">SEA EXPORT</SelectItem>
+                  <SelectItem value="SEA IMPORT">SEA IMPORT</SelectItem>
+                  <SelectItem value="AIR EXPORT">AIR EXPORT</SelectItem>
+                  <SelectItem value="AIR IMPORT">AIR IMPORT</SelectItem>
+                  <SelectItem value="LAND PORT EXPORT">LAND PORT EXPORT</SelectItem>
+                  <SelectItem value="LAND PORT IMPORT">LAND PORT IMPORT</SelectItem>
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Job Type (auto)">
+              <Input value={jobType} disabled />
+            </Field>
+            <Field label="Shipment Mode (auto)">
+              <Input value={shipmentMode} disabled />
+            </Field>
+            <Field label="Job Date *">
+              <Input type="date" value={form.jobDate} onChange={(e) => set("jobDate", e.target.value)} />
+            </Field>
+            <Field label="Job Year (auto)">
+              <Input value={new Date(form.jobDate).getFullYear()} disabled />
+            </Field>
+            <Field label="Job No (auto)">
+              <Input value={form.jobNo} onChange={(e) => set("jobNo", e.target.value)} />
+            </Field>
+            <Field label="Status">
+              <Select value={form.status} onValueChange={(v) => set("status", v as FormState["status"])}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ACTIVE">ACTIVE</SelectItem>
+                  <SelectItem value="HOLD">HOLD</SelectItem>
+                  <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+                </SelectContent>
+              </Select>
+            </Field>
+          </div>
+          <div className="flex justify-end">
+            <Button onClick={() => completeStep(1)} disabled={!form.regId || !form.jobDate} className="gap-1.5">
+              Continue <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </Card>
 
         {/* STEP 2 */}
         {step === 2 && (
