@@ -143,12 +143,11 @@ function JobsList() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[170px]">Job No</TableHead>
+                <TableHead>Reg ID</TableHead>
                 <TableHead>Created Date</TableHead>
                 <TableHead>Last Update</TableHead>
                 <TableHead>Party Name</TableHead>
                 <TableHead>Concern</TableHead>
-                <TableHead>Reg ID</TableHead>
-                <TableHead>Station</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Completion Status</TableHead>
               </TableRow>
@@ -161,6 +160,11 @@ function JobsList() {
                       {fmtJobNo(j)}
                     </Link>
                   </TableCell>
+                  <TableCell>
+                    <span className="rounded bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
+                      {j.regId}
+                    </span>
+                  </TableCell>
                   <TableCell className="text-sm whitespace-nowrap">{fmtDate(j.jobDate)}</TableCell>
                   <TableCell className="text-sm whitespace-nowrap">{fmtDate(j.lastUpdate)}</TableCell>
                   <TableCell>
@@ -169,13 +173,14 @@ function JobsList() {
                   </TableCell>
                   <TableCell className="text-sm">{j.concern}</TableCell>
                   <TableCell>
-                    <span className="rounded bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
-                      {j.regId}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-sm">{j.station}</TableCell>
-                  <TableCell>
-                    <StatusBadge variant={statusVariant(j.status)}>{j.status}</StatusBadge>
+                    {(() => {
+                      const isActive = ["ACTIVE", "PENDING DOCS", "CLEARED"].includes(j.status);
+                      return (
+                        <StatusBadge variant={isActive ? "success" : "muted"}>
+                          {isActive ? "ACTIVE" : "INACTIVE"}
+                        </StatusBadge>
+                      );
+                    })()}
                   </TableCell>
                   <TableCell>
                     <StatusBadge
@@ -194,7 +199,7 @@ function JobsList() {
               ))}
               {filtered.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={9} className="py-12 text-center text-sm text-muted-foreground">
+                  <TableCell colSpan={8} className="py-12 text-center text-sm text-muted-foreground">
                     No jobs match your filters.
                   </TableCell>
                 </TableRow>

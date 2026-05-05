@@ -1,10 +1,15 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Search, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import {
   Table,
   TableBody,
@@ -13,14 +18,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { parties, jobs, bills, expenses, fmtBDT } from "@/lib/mock-data";
+import { parties, jobs, bills, expenses, fmtBDT, type Party } from "@/lib/mock-data";
+import { PartyDetailPanel } from "./clients.parties";
 
 export const Route = createFileRoute("/clients/")({
   component: AllPartyInformation,
 });
 
 function AllPartyInformation() {
-  const [search, setSearch] = useState("");
+  const [openParty, setOpenParty] = useState<Party | null>(null);
 
   const rows = useMemo(() => {
     return parties.map((p) => {
@@ -39,11 +45,7 @@ function AllPartyInformation() {
     });
   }, []);
 
-  const filtered = rows.filter((r) =>
-    r.p.name.toLowerCase().includes(search.toLowerCase()),
-  );
-
-  const totals = filtered.reduce(
+  const totals = rows.reduce(
     (acc, r) => ({
       total: acc.total + r.total,
       spend: acc.spend + r.spend,
@@ -62,23 +64,14 @@ function AllPartyInformation() {
       />
 
       <div className="grid gap-3 md:grid-cols-4">
-        <StatCard label="Total Parties" value={String(filtered.length)} />
+        <StatCard label="Total Parties" value={String(rows.length)} />
         <StatCard label="Total Jobs" value={String(totals.total)} />
         <StatCard label="Total Billing" value={fmtBDT(totals.billing)} />
         <StatCard label="Total Earned" value={fmtBDT(totals.earned)} accent />
       </div>
 
       <Card>
-        <CardContent className="p-4 space-y-3">
-          <div className="relative max-w-sm">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search party name..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-8"
-            />
-          </div>
+        <CardContent className="p-4">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
@@ -95,7 +88,7 @@ function AllPartyInformation() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.map((r) => (
+                {rows.map((r) => (
                   <TableRow key={r.p.id} className="hover:bg-muted/30">
                     <TableCell>
                       <div className="font-medium">{r.p.name}</div>
@@ -117,16 +110,17 @@ function AllPartyInformation() {
                       {fmtBDT(r.earned)}
                     </TableCell>
                     <TableCell>
-                      <Link
-                        to="/clients/parties"
+                      <button
+                        onClick={() => setOpenParty(r.p)}
                         className="inline-flex items-center text-muted-foreground hover:text-foreground"
+                        aria-label={`Open ${r.p.name} details`}
                       >
                         <ExternalLink className="h-4 w-4" />
-                      </Link>
+                      </button>
                     </TableCell>
                   </TableRow>
                 ))}
-                {filtered.length === 0 && (
+                {rows.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                       No parties found
@@ -138,6 +132,19 @@ function AllPartyInformation() {
           </div>
         </CardContent>
       </Card>
+
+      <Sheet open={!!openParty} onOpenChange={(o) => !o && setOpenParty(null)}>
+        <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-3xl">
+          <SheetHeader>
+            <SheetTitle>{openParty?.name}</SheetTitle>
+          </SheetHeader>
+          {openParty && (
+            <div className="mt-4">
+              <PartyDetailPanel party={openParty} />
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
