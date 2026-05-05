@@ -132,6 +132,19 @@ function AllPartyInformation() {
           </div>
         </CardContent>
       </Card>
+
+      <Sheet open={!!openParty} onOpenChange={(o) => !o && setOpenParty(null)}>
+        <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-3xl">
+          <SheetHeader>
+            <SheetTitle>{openParty?.name}</SheetTitle>
+          </SheetHeader>
+          {openParty && (
+            <div className="mt-4">
+              <PartyDetailPanel party={openParty} />
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
