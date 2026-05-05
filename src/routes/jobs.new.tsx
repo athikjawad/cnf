@@ -135,9 +135,9 @@ const STEPS = [
 
 function NewJobWizard() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormState>(init);
   const [savedAt, setSavedAt] = useState<string | null>(null);
+  const [completed, setCompleted] = useState<Record<number, boolean>>({});
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
     setForm((f) => ({ ...f, [k]: v }));
@@ -170,8 +170,17 @@ function NewJobWizard() {
 
   const selectedParty = parties.find((p) => p.id === form.partyId);
 
-  const next = () => setStep((s) => Math.min(6, s + 1));
-  const prev = () => setStep((s) => Math.max(1, s - 1));
+  const scrollToStep = (n: number) => {
+    setTimeout(() => {
+      const el = document.getElementById(`step-${n}`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
+
+  const completeStep = (n: number) => {
+    setCompleted((c) => ({ ...c, [n]: true }));
+    if (n < 6) scrollToStep(n + 1);
+  };
 
   const create = (alsoExpense = false) => {
     toast.success(`Job ${form.jobNo}|${new Date().getFullYear()}|${jobType || "—"} created successfully`);
@@ -187,17 +196,11 @@ function NewJobWizard() {
     toast.success("Draft saved");
   };
 
-  const canProceed = () => {
-    if (step === 1) return !!form.regId && !!form.jobDate;
-    if (step === 2) return !!form.partyName;
-    return true;
-  };
-
   return (
     <div>
       <PageHeader
         title="Create New Job"
-        description="6-step wizard — auto-saves draft every 30 seconds"
+        description="Single-page form — auto-saves draft every 30 seconds"
         crumbs={[{ label: "Jobs", href: "/jobs" }, { label: "New" }]}
         actions={
           <>
@@ -212,22 +215,19 @@ function NewJobWizard() {
       />
 
       <div className="p-6 space-y-6 max-w-5xl">
-        {/* Stepper */}
-        <Card className="p-4">
+        {/* Stepper (jump links) */}
+        <Card className="p-4 sticky top-0 z-10 bg-background/95 backdrop-blur">
           <ol className="flex flex-wrap items-center gap-2">
             {STEPS.map((s, i) => {
-              const done = step > s.n;
-              const current = step === s.n;
+              const done = completed[s.n];
               return (
                 <li key={s.n} className="flex items-center gap-2">
                   <button
-                    onClick={() => setStep(s.n)}
+                    onClick={() => scrollToStep(s.n)}
                     className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-                      current
-                        ? "bg-primary text-primary-foreground"
-                        : done
-                          ? "bg-success/10 text-success"
-                          : "bg-muted text-muted-foreground hover:bg-secondary"
+                      done
+                        ? "bg-success/10 text-success"
+                        : "bg-muted text-muted-foreground hover:bg-secondary"
                     }`}
                   >
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-background/30 text-[10px]">
