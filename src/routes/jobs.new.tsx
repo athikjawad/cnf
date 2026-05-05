@@ -298,257 +298,252 @@ function NewJobWizard() {
         </Card>
 
         {/* STEP 2 */}
-        {step === 2 && (
-          <Card className="p-6 space-y-4">
-            <h2 className="text-base font-semibold">Step 2 — Parties</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Party Name * (typeahead from Party Master)">
-                <Select
-                  value={form.partyId}
-                  onValueChange={(id) => {
-                    const p = parties.find((pp) => pp.id === id);
-                    if (p) {
-                      set("partyId", id);
-                      set("partyName", p.name);
-                      set("consigneeAddress", p.address);
-                    }
-                  }}
-                >
-                  <SelectTrigger><SelectValue placeholder="Select party..." /></SelectTrigger>
-                  <SelectContent>
-                    {parties.map((p) => (
-                      <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button variant="ghost" size="sm" className="mt-1 h-7 gap-1 text-xs" onClick={() => toast.info("Inline party creation form would open here")}>
-                  <Plus className="h-3 w-3" /> Add as new party
-                </Button>
-              </Field>
-              <Field label="Concern Name">
-                <Select value={form.concern} onValueChange={(v) => set("concern", v)} disabled={!selectedParty}>
-                  <SelectTrigger><SelectValue placeholder={selectedParty ? "Select concern" : "Pick party first"} /></SelectTrigger>
-                  <SelectContent>
-                    {selectedParty?.concerns.map((c) => (
-                      <SelectItem key={c} value={c}>{c}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field label="Consignee Name">
-                <Input value={form.consigneeName} onChange={(e) => set("consigneeName", e.target.value)} />
-              </Field>
-              <Field label="Consignee Address">
-                <Textarea value={form.consigneeAddress} onChange={(e) => set("consigneeAddress", e.target.value)} rows={2} />
-              </Field>
-            </div>
-          </Card>
-        )}
+        <Card id="step-2" className="p-6 space-y-4 scroll-mt-24">
+          <h2 className="text-base font-semibold">Step 2 — Parties</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Party Name * (typeahead from Party Master)">
+              <Select
+                value={form.partyId}
+                onValueChange={(id) => {
+                  const p = parties.find((pp) => pp.id === id);
+                  if (p) {
+                    set("partyId", id);
+                    set("partyName", p.name);
+                    set("consigneeAddress", p.address);
+                  }
+                }}
+              >
+                <SelectTrigger><SelectValue placeholder="Select party..." /></SelectTrigger>
+                <SelectContent>
+                  {parties.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button variant="ghost" size="sm" className="mt-1 h-7 gap-1 text-xs" onClick={() => toast.info("Inline party creation form would open here")}>
+                <Plus className="h-3 w-3" /> Add as new party
+              </Button>
+            </Field>
+            <Field label="Concern Name">
+              <Select value={form.concern} onValueChange={(v) => set("concern", v)} disabled={!selectedParty}>
+                <SelectTrigger><SelectValue placeholder={selectedParty ? "Select concern" : "Pick party first"} /></SelectTrigger>
+                <SelectContent>
+                  {selectedParty?.concerns.map((c) => (
+                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Consignee Name">
+              <Input value={form.consigneeName} onChange={(e) => set("consigneeName", e.target.value)} />
+            </Field>
+            <Field label="Consignee Address">
+              <Textarea value={form.consigneeAddress} onChange={(e) => set("consigneeAddress", e.target.value)} rows={2} />
+            </Field>
+          </div>
+          <div className="flex justify-end">
+            <Button onClick={() => completeStep(2)} disabled={!form.partyName} className="gap-1.5">
+              Continue <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </Card>
 
         {/* STEP 3 */}
-        {step === 3 && (
-          <Card className="p-6 space-y-4">
-            <h2 className="text-base font-semibold">Step 3 — Shipment Details</h2>
-            <div className="grid gap-4 md:grid-cols-3">
-              <Field label="Goods Description" className="md:col-span-3">
-                <Input value={form.goodsDescription} onChange={(e) => set("goodsDescription", e.target.value)} />
-              </Field>
-              <Field label="Package Qty">
-                <Input type="number" value={form.packageQty} onChange={(e) => set("packageQty", e.target.value)} />
-              </Field>
-              <Field label="Package Type">
-                <Select value={form.packageType} onValueChange={(v) => set("packageType", v)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {["Cartons", "Rolls", "Bags", "Pallets", "Pieces", "Drums", "Bales"].map((t) => (
-                      <SelectItem key={t} value={t}>{t}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field label="CBM">
-                <Input type="number" step="0.01" value={form.cbm} onChange={(e) => set("cbm", e.target.value)} />
-              </Field>
-              <Field label="Gross Weight (kg)">
-                <Input type="number" step="0.01" value={form.grossWeight} onChange={(e) => set("grossWeight", e.target.value)} />
-              </Field>
-              <Field label="Net Weight (kg)">
-                <Input type="number" step="0.01" value={form.netWeight} onChange={(e) => set("netWeight", e.target.value)} />
-              </Field>
-              <Field label="Currency">
-                <Select value={form.currency} onValueChange={(v) => set("currency", v as FormState["currency"])}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="EUR">EUR</SelectItem>
-                    <SelectItem value="GBP">GBP</SelectItem>
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field label={`C&F Value (${form.currency})`}>
-                <Input type="number" step="0.01" value={form.cfValue} onChange={(e) => set("cfValue", e.target.value)} />
-              </Field>
-              <Field label="Exchange Rate">
-                <Input type="number" step="0.01" value={form.exchangeRate} onChange={(e) => set("exchangeRate", e.target.value)} />
-              </Field>
-              <Field label="C&F Value (BDT) — auto" className="md:col-span-2">
-                <Input value={fmtBDT(cfBDT)} disabled className="font-mono" />
-              </Field>
-              <Field label="Assessable Value (BDT)">
-                <Input type="number" value={form.assessableValue} onChange={(e) => set("assessableValue", e.target.value)} />
-              </Field>
-              <Field label="Unit Value">
-                <Input type="number" step="0.01" value={form.unitValue} onChange={(e) => set("unitValue", e.target.value)} />
-              </Field>
-            </div>
-          </Card>
-        )}
+        <Card id="step-3" className="p-6 space-y-4 scroll-mt-24">
+          <h2 className="text-base font-semibold">Step 3 — Shipment Details</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            <Field label="Goods Description" className="md:col-span-3">
+              <Input value={form.goodsDescription} onChange={(e) => set("goodsDescription", e.target.value)} />
+            </Field>
+            <Field label="Package Qty">
+              <Input type="number" value={form.packageQty} onChange={(e) => set("packageQty", e.target.value)} />
+            </Field>
+            <Field label="Package Type">
+              <Select value={form.packageType} onValueChange={(v) => set("packageType", v)}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {["Cartons", "Rolls", "Bags", "Pallets", "Pieces", "Drums", "Bales"].map((t) => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="CBM">
+              <Input type="number" step="0.01" value={form.cbm} onChange={(e) => set("cbm", e.target.value)} />
+            </Field>
+            <Field label="Gross Weight (kg)">
+              <Input type="number" step="0.01" value={form.grossWeight} onChange={(e) => set("grossWeight", e.target.value)} />
+            </Field>
+            <Field label="Net Weight (kg)">
+              <Input type="number" step="0.01" value={form.netWeight} onChange={(e) => set("netWeight", e.target.value)} />
+            </Field>
+            <Field label="Currency">
+              <Select value={form.currency} onValueChange={(v) => set("currency", v as FormState["currency"])}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="USD">USD</SelectItem>
+                  <SelectItem value="EUR">EUR</SelectItem>
+                  <SelectItem value="GBP">GBP</SelectItem>
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label={`C&F Value (${form.currency})`}>
+              <Input type="number" step="0.01" value={form.cfValue} onChange={(e) => set("cfValue", e.target.value)} />
+            </Field>
+            <Field label="Exchange Rate">
+              <Input type="number" step="0.01" value={form.exchangeRate} onChange={(e) => set("exchangeRate", e.target.value)} />
+            </Field>
+            <Field label="C&F Value (BDT) — auto" className="md:col-span-2">
+              <Input value={fmtBDT(cfBDT)} disabled className="font-mono" />
+            </Field>
+            <Field label="Assessable Value (BDT)">
+              <Input type="number" value={form.assessableValue} onChange={(e) => set("assessableValue", e.target.value)} />
+            </Field>
+            <Field label="Unit Value">
+              <Input type="number" step="0.01" value={form.unitValue} onChange={(e) => set("unitValue", e.target.value)} />
+            </Field>
+          </div>
+          <div className="flex justify-end">
+            <Button onClick={() => completeStep(3)} className="gap-1.5">
+              Continue <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </Card>
 
         {/* STEP 4 */}
-        {step === 4 && (
-          <Card className="p-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-base font-semibold">Step 4 — Documentation</h2>
-              <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Info className="h-3 w-3" /> Incomplete docs won't block creation — they trigger warnings
-              </span>
-            </div>
-            <DocPair label="B/E" no={form.beNo} date={form.beDate} onNo={(v) => set("beNo", v)} onDate={(v) => set("beDate", v)} />
-            <DocPair label="Invoice" no={form.invoiceNo} date={form.invoiceDate} onNo={(v) => set("invoiceNo", v)} onDate={(v) => set("invoiceDate", v)} />
-            <DocPair label="L/C" no={form.lcNo} date={form.lcDate} onNo={(v) => set("lcNo", v)} onDate={(v) => set("lcDate", v)} />
-            <DocPair label="IP/EP" no={form.ipEpNo} date={form.ipEpDate} onNo={(v) => set("ipEpNo", v)} onDate={(v) => set("ipEpDate", v)} />
-            <Field label="H.S Code (e.g. 5205.13.00)">
-              <Input value={form.hsCode} onChange={(e) => set("hsCode", e.target.value)} placeholder="0000.00.00" />
-            </Field>
-            {!isAir && (
-              <p className="rounded-md bg-muted p-3 text-xs text-muted-foreground">
-                AWB / HAWB / H/BL / SC / CRF fields are hidden — Reg ID is not AIR.
-              </p>
-            )}
-            {isAir && (
-              <>
-                <h3 className="pt-2 text-sm font-semibold">Air-only documents</h3>
-                <DocPair label="AWB" no={form.awbNo} date={form.awbDate} onNo={(v) => set("awbNo", v)} onDate={(v) => set("awbDate", v)} />
-              </>
-            )}
-          </Card>
-        )}
+        <Card id="step-4" className="p-6 space-y-4 scroll-mt-24">
+          <div className="flex items-center justify-between">
+            <h2 className="text-base font-semibold">Step 4 — Documentation</h2>
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Info className="h-3 w-3" /> Incomplete docs won't block creation — they trigger warnings
+            </span>
+          </div>
+          <DocPair label="B/E" no={form.beNo} date={form.beDate} onNo={(v) => set("beNo", v)} onDate={(v) => set("beDate", v)} />
+          <DocPair label="Invoice" no={form.invoiceNo} date={form.invoiceDate} onNo={(v) => set("invoiceNo", v)} onDate={(v) => set("invoiceDate", v)} />
+          <DocPair label="L/C" no={form.lcNo} date={form.lcDate} onNo={(v) => set("lcNo", v)} onDate={(v) => set("lcDate", v)} />
+          <DocPair label="IP/EP" no={form.ipEpNo} date={form.ipEpDate} onNo={(v) => set("ipEpNo", v)} onDate={(v) => set("ipEpDate", v)} />
+          <Field label="H.S Code (e.g. 5205.13.00)">
+            <Input value={form.hsCode} onChange={(e) => set("hsCode", e.target.value)} placeholder="0000.00.00" />
+          </Field>
+          {!isAir && (
+            <p className="rounded-md bg-muted p-3 text-xs text-muted-foreground">
+              AWB / HAWB / H/BL / SC / CRF fields are hidden — Reg ID is not AIR.
+            </p>
+          )}
+          {isAir && (
+            <>
+              <h3 className="pt-2 text-sm font-semibold">Air-only documents</h3>
+              <DocPair label="AWB" no={form.awbNo} date={form.awbDate} onNo={(v) => set("awbNo", v)} onDate={(v) => set("awbDate", v)} />
+            </>
+          )}
+          <div className="flex justify-end">
+            <Button onClick={() => completeStep(4)} className="gap-1.5">
+              Continue <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </Card>
 
         {/* STEP 5 */}
-        {step === 5 && (
-          <Card className="p-6 space-y-4">
-            <h2 className="text-base font-semibold">Step 5 — Shipping & Logistics</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              <DocPair label="B/L" no={form.blNo} date={form.blDate} onNo={(v) => set("blNo", v)} onDate={(v) => set("blDate", v)} />
-              <Field label="Container No"><Input value={form.containerNo} onChange={(e) => set("containerNo", e.target.value)} /></Field>
-              <Field label="Vessel Name"><Input value={form.vesselName} onChange={(e) => set("vesselName", e.target.value)} /></Field>
-              <Field label="Shipping Agent">
-                <Select value={form.shippingAgent} onValueChange={(v) => set("shippingAgent", v)}>
-                  <SelectTrigger><SelectValue placeholder="Select agent" /></SelectTrigger>
-                  <SelectContent>
-                    {shippingAgents.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field label="Off Dock">
-                <Select value={form.offDock} onValueChange={(v) => set("offDock", v)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {offDocks.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field label="Transport Name"><Input value={form.transportName} onChange={(e) => set("transportName", e.target.value)} /></Field>
-              <Field label="Port Charge">
-                <Select value={form.portCharge} onValueChange={(v) => set("portCharge", v as FormState["portCharge"])}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="NIL">NIL</SelectItem>
-                    <SelectItem value="Paid">Paid</SelectItem>
-                    <SelectItem value="Pending">Pending</SelectItem>
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field label="Commission (BDT)">
-                <Input type="number" value={form.commission} onChange={(e) => set("commission", e.target.value)} />
-              </Field>
-              <Field label="Completion Status">
-                <Select value={form.completionStatus} onValueChange={(v) => set("completionStatus", v as FormState["completionStatus"])}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="INCOMPLETE">INCOMPLETE</SelectItem>
-                    <SelectItem value="COMPLETE">COMPLETE</SelectItem>
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field label="Remarks" className="md:col-span-2">
-                <Textarea value={form.remarks} onChange={(e) => set("remarks", e.target.value)} rows={2} />
-              </Field>
-            </div>
-          </Card>
-        )}
+        <Card id="step-5" className="p-6 space-y-4 scroll-mt-24">
+          <h2 className="text-base font-semibold">Step 5 — Shipping & Logistics</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <DocPair label="B/L" no={form.blNo} date={form.blDate} onNo={(v) => set("blNo", v)} onDate={(v) => set("blDate", v)} />
+            <Field label="Container No"><Input value={form.containerNo} onChange={(e) => set("containerNo", e.target.value)} /></Field>
+            <Field label="Vessel Name"><Input value={form.vesselName} onChange={(e) => set("vesselName", e.target.value)} /></Field>
+            <Field label="Shipping Agent">
+              <Select value={form.shippingAgent} onValueChange={(v) => set("shippingAgent", v)}>
+                <SelectTrigger><SelectValue placeholder="Select agent" /></SelectTrigger>
+                <SelectContent>
+                  {shippingAgents.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Off Dock">
+              <Select value={form.offDock} onValueChange={(v) => set("offDock", v)}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {offDocks.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Transport Name"><Input value={form.transportName} onChange={(e) => set("transportName", e.target.value)} /></Field>
+            <Field label="Port Charge">
+              <Select value={form.portCharge} onValueChange={(v) => set("portCharge", v as FormState["portCharge"])}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="NIL">NIL</SelectItem>
+                  <SelectItem value="Paid">Paid</SelectItem>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Commission (BDT)">
+              <Input type="number" value={form.commission} onChange={(e) => set("commission", e.target.value)} />
+            </Field>
+            <Field label="Completion Status">
+              <Select value={form.completionStatus} onValueChange={(v) => set("completionStatus", v as FormState["completionStatus"])}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="INCOMPLETE">INCOMPLETE</SelectItem>
+                  <SelectItem value="COMPLETE">COMPLETE</SelectItem>
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Remarks" className="md:col-span-2">
+              <Textarea value={form.remarks} onChange={(e) => set("remarks", e.target.value)} rows={2} />
+            </Field>
+          </div>
+          <div className="flex justify-end">
+            <Button onClick={() => completeStep(5)} className="gap-1.5">
+              Continue <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </Card>
 
         {/* STEP 6 */}
-        {step === 6 && (
-          <Card className="p-6 space-y-4">
-            <h2 className="text-base font-semibold">Step 6 — Review & Create</h2>
-            <ReviewSection title="Basic Info">
-              <KV label="Reg ID" value={form.regId || "—"} />
-              <KV label="Job Type" value={jobType || "—"} />
-              <KV label="Job Date" value={fmtDate(form.jobDate)} />
-              <KV label="Job No" value={`#${form.jobNo}`} />
-              <KV label="Status" value={form.status} />
-            </ReviewSection>
-            <ReviewSection title="Parties">
-              <KV label="Party" value={form.partyName || "—"} warn={!form.partyName} />
-              <KV label="Concern" value={form.concern || "—"} />
-              <KV label="Consignee" value={form.consigneeName || "—"} />
-            </ReviewSection>
-            <ReviewSection title="Shipment">
-              <KV label="Goods" value={form.goodsDescription || "—"} />
-              <KV label={`C&F (${form.currency})`} value={form.cfValue || "0"} />
-              <KV label="C&F (BDT)" value={fmtBDT(cfBDT)} />
-              <KV label="Packages" value={`${form.packageQty || 0} ${form.packageType}`} />
-            </ReviewSection>
-            <ReviewSection title="Documentation">
-              <KV label="B/E No" value={form.beNo || "—"} warn={!form.beNo} />
-              <KV label="Invoice" value={form.invoiceNo || "—"} warn={!form.invoiceNo} />
-              <KV label="HS Code" value={form.hsCode || "—"} warn={!form.hsCode} />
-            </ReviewSection>
-            <ReviewSection title="Shipping">
-              <KV label="B/L" value={form.blNo || "—"} />
-              <KV label="Container" value={form.containerNo || "—"} />
-              <KV label="Shipping Agent" value={form.shippingAgent || "—"} />
-              <KV label="Port Charge" value={form.portCharge} />
-            </ReviewSection>
-            <div className="rounded-md border-warning/30 border bg-warning/5 p-3 text-xs text-warning-foreground">
-              <AlertTriangle className="mr-1 inline h-3 w-3" />
-              Fields highlighted in amber are missing but not required. You can complete them later from the Job Workspace.
-            </div>
-          </Card>
-        )}
-
-        {/* Navigation */}
-        <div className="flex items-center justify-between">
-          <Button variant="outline" onClick={prev} disabled={step === 1} className="gap-1.5">
-            <ArrowLeft className="h-4 w-4" /> Back
-          </Button>
-          <div className="flex items-center gap-2">
-            {step < 6 ? (
-              <Button onClick={next} disabled={!canProceed()} className="gap-1.5">
-                Next <ArrowRight className="h-4 w-4" />
-              </Button>
-            ) : (
-              <>
-                <Button variant="outline" onClick={saveDraft}>Save as Draft</Button>
-                <Button onClick={() => create(false)}>Create Job</Button>
-                <Button onClick={() => create(true)} className="gap-1.5">
-                  Create Job + Add Expense <ArrowRight className="h-4 w-4" />
-                </Button>
-              </>
-            )}
+        <Card id="step-6" className="p-6 space-y-4 scroll-mt-24">
+          <h2 className="text-base font-semibold">Step 6 — Review & Create</h2>
+          <ReviewSection title="Basic Info">
+            <KV label="Reg ID" value={form.regId || "—"} />
+            <KV label="Job Type" value={jobType || "—"} />
+            <KV label="Job Date" value={fmtDate(form.jobDate)} />
+            <KV label="Job No" value={`#${form.jobNo}`} />
+            <KV label="Status" value={form.status} />
+          </ReviewSection>
+          <ReviewSection title="Parties">
+            <KV label="Party" value={form.partyName || "—"} warn={!form.partyName} />
+            <KV label="Concern" value={form.concern || "—"} />
+            <KV label="Consignee" value={form.consigneeName || "—"} />
+          </ReviewSection>
+          <ReviewSection title="Shipment">
+            <KV label="Goods" value={form.goodsDescription || "—"} />
+            <KV label={`C&F (${form.currency})`} value={form.cfValue || "0"} />
+            <KV label="C&F (BDT)" value={fmtBDT(cfBDT)} />
+            <KV label="Packages" value={`${form.packageQty || 0} ${form.packageType}`} />
+          </ReviewSection>
+          <ReviewSection title="Documentation">
+            <KV label="B/E No" value={form.beNo || "—"} warn={!form.beNo} />
+            <KV label="Invoice" value={form.invoiceNo || "—"} warn={!form.invoiceNo} />
+            <KV label="HS Code" value={form.hsCode || "—"} warn={!form.hsCode} />
+          </ReviewSection>
+          <ReviewSection title="Shipping">
+            <KV label="B/L" value={form.blNo || "—"} />
+            <KV label="Container" value={form.containerNo || "—"} />
+            <KV label="Shipping Agent" value={form.shippingAgent || "—"} />
+            <KV label="Port Charge" value={form.portCharge} />
+          </ReviewSection>
+          <div className="rounded-md border-warning/30 border bg-warning/5 p-3 text-xs text-warning-foreground">
+            <AlertTriangle className="mr-1 inline h-3 w-3" />
+            Fields highlighted in amber are missing but not required. You can complete them later from the Job Workspace.
           </div>
-        </div>
+          <div className="flex flex-wrap items-center justify-end gap-2 pt-2">
+            <Button variant="outline" onClick={saveDraft}>Save as Draft</Button>
+            <Button onClick={() => create(false)}>Create Job</Button>
+            <Button onClick={() => create(true)} className="gap-1.5">
+              Create Job + Add Expense <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </Card>
       </div>
     </div>
   );
