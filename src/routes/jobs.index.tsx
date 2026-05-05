@@ -143,12 +143,11 @@ function JobsList() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[170px]">Job No</TableHead>
+                <TableHead>Reg ID</TableHead>
                 <TableHead>Created Date</TableHead>
                 <TableHead>Last Update</TableHead>
                 <TableHead>Party Name</TableHead>
                 <TableHead>Concern</TableHead>
-                <TableHead>Reg ID</TableHead>
-                <TableHead>Station</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Completion Status</TableHead>
               </TableRow>
