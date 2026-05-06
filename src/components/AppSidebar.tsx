@@ -45,7 +45,6 @@ const CNF: Item[] = [
 
 const CLIENTS: Item[] = [
   { key: "clients", title: "All Party Information", url: "/clients", icon: ListChecks },
-  { key: "clients", title: "Party Information", url: "/clients/parties", icon: UserSquare2 },
 ];
 
 const FINANCE: Item[] = [

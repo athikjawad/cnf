@@ -215,7 +215,7 @@ function NewJobWizard() {
 
       <div className="p-6 space-y-6 max-w-5xl">
         {/* Stepper (jump links) */}
-        <Card className="p-4 sticky top-0 z-10 bg-background/95 backdrop-blur">
+        <Card className="p-4 sticky top-14 z-20 bg-background/95 backdrop-blur shadow-sm">
           <ol className="flex flex-wrap items-center gap-2">
             {STEPS.map((s, i) => {
               const done = completed[s.n];
