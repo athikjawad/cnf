@@ -115,18 +115,21 @@ function ExpenseReports() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-4">
+      <CardHeader className="flex flex-row items-center justify-between gap-4 flex-wrap">
         <CardTitle className="text-base">Expense Report</CardTitle>
-        <Select value={view} onValueChange={(v) => setView(v as ExpenseView)}>
-          <SelectTrigger className="w-[260px]"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="head">Head Wise Statement</SelectItem>
-            <SelectItem value="headPL">Head Wise P/L Statement</SelectItem>
-            <SelectItem value="category">Category Wise Statement</SelectItem>
-            <SelectItem value="register">Register Details</SelectItem>
-            <SelectItem value="registerJob">Register Selected Job</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-3 flex-wrap">
+          <Select value={view} onValueChange={(v) => setView(v as ExpenseView)}>
+            <SelectTrigger className="w-[260px]"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="head">Head Wise Statement</SelectItem>
+              <SelectItem value="headPL">Head Wise P/L Statement</SelectItem>
+              <SelectItem value="category">Category Wise Statement</SelectItem>
+              <SelectItem value="register">Register Details</SelectItem>
+              <SelectItem value="registerJob">Register Selected Job</SelectItem>
+            </SelectContent>
+          </Select>
+          <DateRangeFilter />
+        </div>
       </CardHeader>
       <CardContent>
         {view === "head" && <HeadWise />}
