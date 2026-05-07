@@ -332,18 +332,21 @@ function JobReports() {
   const [view, setView] = useState<JobView>("date");
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-4">
+      <CardHeader className="flex flex-row items-center justify-between gap-4 flex-wrap">
         <CardTitle className="text-base">Job Report</CardTitle>
-        <Select value={view} onValueChange={(v) => setView(v as JobView)}>
-          <SelectTrigger className="w-[220px]"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="date">Date Wise</SelectItem>
-            <SelectItem value="type">Type Wise</SelectItem>
-            <SelectItem value="party">Party Wise</SelectItem>
-            <SelectItem value="station">Station Wise</SelectItem>
-            <SelectItem value="glance">Job At A Glance</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-3 flex-wrap">
+          <Select value={view} onValueChange={(v) => setView(v as JobView)}>
+            <SelectTrigger className="w-[220px]"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="date">Date Wise</SelectItem>
+              <SelectItem value="type">Type Wise</SelectItem>
+              <SelectItem value="party">Party Wise</SelectItem>
+              <SelectItem value="station">Station Wise</SelectItem>
+              <SelectItem value="glance">Job At A Glance</SelectItem>
+            </SelectContent>
+          </Select>
+          <DateRangeFilter />
+        </div>
       </CardHeader>
       <CardContent>
         {view === "date" && <JobDateWise />}
