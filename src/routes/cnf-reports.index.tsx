@@ -23,6 +23,46 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { jobs, expenses, bills, parties, fmtBDT, fmtDate } from "@/lib/mock-data";
+import { Input } from "@/components/ui/input";
+
+function DateRangeFilter() {
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
+        <span className="text-xs text-muted-foreground">From</span>
+        <Input
+          type="date"
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+          className="h-9 w-[150px]"
+        />
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className="text-xs text-muted-foreground">To</span>
+        <Input
+          type="date"
+          value={to}
+          onChange={(e) => setTo(e.target.value)}
+          className="h-9 w-[150px]"
+        />
+      </div>
+      <Button
+        size="sm"
+        onClick={() =>
+          toast.success(
+            from || to
+              ? `Updated: ${from || "…"} → ${to || "…"}`
+              : "Showing all dates",
+          )
+        }
+      >
+        Update
+      </Button>
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/cnf-reports/")({
   component: CnFReports,
@@ -75,18 +115,21 @@ function ExpenseReports() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-4">
+      <CardHeader className="flex flex-row items-center justify-between gap-4 flex-wrap">
         <CardTitle className="text-base">Expense Report</CardTitle>
-        <Select value={view} onValueChange={(v) => setView(v as ExpenseView)}>
-          <SelectTrigger className="w-[260px]"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="head">Head Wise Statement</SelectItem>
-            <SelectItem value="headPL">Head Wise P/L Statement</SelectItem>
-            <SelectItem value="category">Category Wise Statement</SelectItem>
-            <SelectItem value="register">Register Details</SelectItem>
-            <SelectItem value="registerJob">Register Selected Job</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-3 flex-wrap">
+          <Select value={view} onValueChange={(v) => setView(v as ExpenseView)}>
+            <SelectTrigger className="w-[260px]"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="head">Head Wise Statement</SelectItem>
+              <SelectItem value="headPL">Head Wise P/L Statement</SelectItem>
+              <SelectItem value="category">Category Wise Statement</SelectItem>
+              <SelectItem value="register">Register Details</SelectItem>
+              <SelectItem value="registerJob">Register Selected Job</SelectItem>
+            </SelectContent>
+          </Select>
+          <DateRangeFilter />
+        </div>
       </CardHeader>
       <CardContent>
         {view === "head" && <HeadWise />}
@@ -289,18 +332,21 @@ function JobReports() {
   const [view, setView] = useState<JobView>("date");
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-4">
+      <CardHeader className="flex flex-row items-center justify-between gap-4 flex-wrap">
         <CardTitle className="text-base">Job Report</CardTitle>
-        <Select value={view} onValueChange={(v) => setView(v as JobView)}>
-          <SelectTrigger className="w-[220px]"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="date">Date Wise</SelectItem>
-            <SelectItem value="type">Type Wise</SelectItem>
-            <SelectItem value="party">Party Wise</SelectItem>
-            <SelectItem value="station">Station Wise</SelectItem>
-            <SelectItem value="glance">Job At A Glance</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-3 flex-wrap">
+          <Select value={view} onValueChange={(v) => setView(v as JobView)}>
+            <SelectTrigger className="w-[220px]"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="date">Date Wise</SelectItem>
+              <SelectItem value="type">Type Wise</SelectItem>
+              <SelectItem value="party">Party Wise</SelectItem>
+              <SelectItem value="station">Station Wise</SelectItem>
+              <SelectItem value="glance">Job At A Glance</SelectItem>
+            </SelectContent>
+          </Select>
+          <DateRangeFilter />
+        </div>
       </CardHeader>
       <CardContent>
         {view === "date" && <JobDateWise />}
@@ -417,18 +463,21 @@ function StatusReports() {
   const [view, setView] = useState<StatusView>("billJob");
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-4">
+      <CardHeader className="flex flex-row items-center justify-between gap-4 flex-wrap">
         <CardTitle className="text-base">Status Wise Report</CardTitle>
-        <Select value={view} onValueChange={(v) => setView(v as StatusView)}>
-          <SelectTrigger className="w-[260px]"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="billJob">Bill — Job Wise</SelectItem>
-            <SelectItem value="billParty">Bill — Party Wise</SelectItem>
-            <SelectItem value="billStation">Bill — Station Wise</SelectItem>
-            <SelectItem value="jobParty">Job — Party Wise</SelectItem>
-            <SelectItem value="jobConcern">Job — Concern Wise</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-3 flex-wrap">
+          <Select value={view} onValueChange={(v) => setView(v as StatusView)}>
+            <SelectTrigger className="w-[260px]"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="billJob">Bill — Job Wise</SelectItem>
+              <SelectItem value="billParty">Bill — Party Wise</SelectItem>
+              <SelectItem value="billStation">Bill — Station Wise</SelectItem>
+              <SelectItem value="jobParty">Job — Party Wise</SelectItem>
+              <SelectItem value="jobConcern">Job — Concern Wise</SelectItem>
+            </SelectContent>
+          </Select>
+          <DateRangeFilter />
+        </div>
       </CardHeader>
       <CardContent>
         {view === "billJob" && <BillJobWise />}
