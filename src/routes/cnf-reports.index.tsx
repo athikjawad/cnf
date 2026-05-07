@@ -23,6 +23,46 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { jobs, expenses, bills, parties, fmtBDT, fmtDate } from "@/lib/mock-data";
+import { Input } from "@/components/ui/input";
+
+function DateRangeFilter() {
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
+        <span className="text-xs text-muted-foreground">From</span>
+        <Input
+          type="date"
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+          className="h-9 w-[150px]"
+        />
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className="text-xs text-muted-foreground">To</span>
+        <Input
+          type="date"
+          value={to}
+          onChange={(e) => setTo(e.target.value)}
+          className="h-9 w-[150px]"
+        />
+      </div>
+      <Button
+        size="sm"
+        onClick={() =>
+          toast.success(
+            from || to
+              ? `Updated: ${from || "…"} → ${to || "…"}`
+              : "Showing all dates",
+          )
+        }
+      >
+        Update
+      </Button>
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/cnf-reports/")({
   component: CnFReports,
