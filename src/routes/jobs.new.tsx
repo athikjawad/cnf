@@ -637,14 +637,14 @@ function Field({
   );
 }
 
-function ControlledSelect<T extends JobForm>({
+function ControlledSelect({
   form,
   name,
   options,
   placeholder,
 }: {
-  form: UseFormReturn<T>;
-  name: Path<T>;
+  form: UseFormReturn<JobForm>;
+  name: Path<JobForm>;
   options: string[];
   placeholder?: string;
 }) {
