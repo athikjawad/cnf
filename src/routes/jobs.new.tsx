@@ -71,13 +71,9 @@ const jobSchema = z.object({
   lcDate: z.string(),
   ipEpNo: z.string(),
   ipEpDate: z.string(),
-  hsCode: z
-    .string()
-    .optional()
-    .default("")
-    .refine((v) => !v || /^\d{4}\.\d{2}\.\d{2}$/.test(v), {
-      message: "Format must be 0000.00.00",
-    }),
+  hsCode: z.string().refine((v) => !v || /^\d{4}\.\d{2}\.\d{2}$/.test(v), {
+    message: "Format must be 0000.00.00",
+  }),
   awbNo: z.string(),
   awbDate: z.string(),
   // Step 5
