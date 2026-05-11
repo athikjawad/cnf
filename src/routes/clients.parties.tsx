@@ -180,6 +180,22 @@ export function PartyDetailPanel({ party: initial }: { party: Party }) {
 
 /* --------------------- Party basic form --------------------- */
 
+const partySchema = z.object({
+  name: z.string().min(2, "Party name must be at least 2 characters"),
+  status: z.enum(["Active", "Inactive", "Hold"]),
+  address: z.string().min(1, "Address is required"),
+  contact: z
+    .string()
+    .min(1, "Contact is required")
+    .regex(/^[+\d\s\-()]{6,}$/, "Enter a valid phone number"),
+  email: z.string().email("Enter a valid email"),
+  webAddress: z.string(),
+  apName: z.string(),
+  apContact: z.string(),
+});
+
+type PartyFormValues = z.infer<typeof partySchema>;
+
 function PartyForm({
   party,
   onChange,
@@ -187,57 +203,86 @@ function PartyForm({
   party: PartyRecord;
   onChange: (p: Partial<PartyRecord>) => void;
 }) {
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors, isDirty },
+    reset,
+  } = useForm<PartyFormValues>({
+    resolver: zodResolver(partySchema),
+    defaultValues: {
+      name: party.name,
+      status: party.status,
+      address: party.address,
+      contact: party.contact,
+      email: party.email,
+      webAddress: party.webAddress,
+      apName: party.apName,
+      apContact: party.apContact,
+    },
+    mode: "onBlur",
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    onChange(data);
+    reset(data);
+    toast.success("Party details saved");
+  });
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-base">Party Details</CardTitle>
       </CardHeader>
-      <CardContent className="grid gap-4 md:grid-cols-2">
-        <Field label="Party Name">
-          <Input value={party.name} onChange={(e) => onChange({ name: e.target.value })} />
-        </Field>
-        <Field label="Status">
-          <Select value={party.status} onValueChange={(v) => onChange({ status: v as PartyStatus })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Active">Active</SelectItem>
-              <SelectItem value="Inactive">Inactive</SelectItem>
-              <SelectItem value="Hold">Hold</SelectItem>
-            </SelectContent>
-          </Select>
-        </Field>
-        <Field label="Address" className="md:col-span-2">
-          <Textarea
-            rows={2}
-            value={party.address}
-            onChange={(e) => onChange({ address: e.target.value })}
-          />
-        </Field>
-        <Field label="Contact No">
-          <Input value={party.contact} onChange={(e) => onChange({ contact: e.target.value })} />
-        </Field>
-        <Field label="Email ID">
-          <Input
-            type="email"
-            value={party.email}
-            onChange={(e) => onChange({ email: e.target.value })}
-          />
-        </Field>
-        <Field label="Web Address">
-          <Input value={party.webAddress} onChange={(e) => onChange({ webAddress: e.target.value })} />
-        </Field>
-        <Field label="A.P. Name">
-          <Input value={party.apName} onChange={(e) => onChange({ apName: e.target.value })} />
-        </Field>
-        <Field label="A.P. Contact No">
-          <Input value={party.apContact} onChange={(e) => onChange({ apContact: e.target.value })} />
-        </Field>
-        <div className="md:col-span-2 flex justify-end">
-          <Button onClick={() => toast.success("Party details saved")}>
-            <Save className="mr-2 h-4 w-4" />
-            Save Changes
-          </Button>
-        </div>
+      <CardContent>
+        <form onSubmit={onSubmit} className="grid gap-4 md:grid-cols-2" noValidate>
+          <Field label="Party Name" error={errors.name?.message}>
+            <Input {...register("name")} />
+          </Field>
+          <Field label="Status" error={errors.status?.message}>
+            <Controller
+              control={control}
+              name="status"
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Active">Active</SelectItem>
+                    <SelectItem value="Inactive">Inactive</SelectItem>
+                    <SelectItem value="Hold">Hold</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </Field>
+          <Field label="Address" className="md:col-span-2" error={errors.address?.message}>
+            <Textarea rows={2} {...register("address")} />
+          </Field>
+          <Field label="Contact No" error={errors.contact?.message}>
+            <Input {...register("contact")} />
+          </Field>
+          <Field label="Email ID" error={errors.email?.message}>
+            <Input type="email" {...register("email")} />
+          </Field>
+          <Field label="Web Address" error={errors.webAddress?.message}>
+            <Input {...register("webAddress")} />
+          </Field>
+          <Field label="A.P. Name" error={errors.apName?.message}>
+            <Input {...register("apName")} />
+          </Field>
+          <Field label="A.P. Contact No" error={errors.apContact?.message}>
+            <Input {...register("apContact")} />
+          </Field>
+          <div className="md:col-span-2 flex justify-end">
+            <Button type="submit" disabled={!isDirty}>
+              <Save className="mr-2 h-4 w-4" />
+              Save Changes
+            </Button>
+          </div>
+        </form>
       </CardContent>
     </Card>
   );
