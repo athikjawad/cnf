@@ -473,20 +473,46 @@ export const vouchers: Voucher[] = [
   { id: "v3", voucherNo: "JV-2024-091", date: daysAgo(3), type: "Journal", debitAccount: "Office Rent", creditAccount: "Rent Payable", amount: 75000, narration: "Office rent accrual" },
 ];
 
-export const chartOfAccounts = [
-  { code: "1000", name: "Cash in Hand", type: "Asset" },
-  { code: "1010", name: "DBBL Bank", type: "Asset" },
-  { code: "1020", name: "EBL Bank", type: "Asset" },
-  { code: "1100", name: "Accounts Receivable", type: "Asset" },
-  { code: "2000", name: "Accounts Payable", type: "Liability" },
-  { code: "2100", name: "Rent Payable", type: "Liability" },
-  { code: "3000", name: "Capital", type: "Equity" },
-  { code: "4000", name: "Service Revenue", type: "Income" },
-  { code: "4010", name: "Commission Income", type: "Income" },
-  { code: "5000", name: "Customs Duty", type: "Expense" },
-  { code: "5010", name: "Port Charge", type: "Expense" },
-  { code: "5020", name: "Office Rent", type: "Expense" },
-  { code: "5030", name: "Salaries", type: "Expense" },
+export interface ChartOfAccount {
+  code: string;
+  name: string;
+  type: "Asset" | "Liability" | "Equity" | "Income" | "Expense";
+  controlCode: string;
+}
+
+export const chartOfAccounts: ChartOfAccount[] = [
+  { code: "1000", name: "Cash in Hand", type: "Asset", controlCode: "1000-CA" },
+  { code: "1010", name: "DBBL Bank", type: "Asset", controlCode: "1010-CA" },
+  { code: "1020", name: "EBL Bank", type: "Asset", controlCode: "1020-CA" },
+  { code: "1100", name: "Accounts Receivable", type: "Asset", controlCode: "1100-AR" },
+  { code: "2000", name: "Accounts Payable", type: "Liability", controlCode: "2000-AP" },
+  { code: "2100", name: "Rent Payable", type: "Liability", controlCode: "2100-CL" },
+  { code: "3000", name: "Capital", type: "Equity", controlCode: "3000-EQ" },
+  { code: "4000", name: "Service Revenue", type: "Income", controlCode: "4000-IN" },
+  { code: "4010", name: "Commission Income", type: "Income", controlCode: "4010-IN" },
+  { code: "5000", name: "Customs Duty", type: "Expense", controlCode: "5000-EX" },
+  { code: "5010", name: "Port Charge", type: "Expense", controlCode: "5010-EX" },
+  { code: "5020", name: "Office Rent", type: "Expense", controlCode: "5020-EX" },
+  { code: "5030", name: "Salaries", type: "Expense", controlCode: "5030-EX" },
+];
+
+export interface OpeningBalance {
+  id: string;
+  date: string;
+  accountCode: string;
+  accountHead: string;
+  debit: number;
+  credit: number;
+}
+
+export const openingBalances: OpeningBalance[] = [
+  { id: "ob1", date: daysAgo(120), accountCode: "1000", accountHead: "Cash in Hand", debit: 250000, credit: 0 },
+  { id: "ob2", date: daysAgo(120), accountCode: "1010", accountHead: "DBBL Bank", debit: 1850000, credit: 0 },
+  { id: "ob3", date: daysAgo(120), accountCode: "1020", accountHead: "EBL Bank", debit: 920000, credit: 0 },
+  { id: "ob4", date: daysAgo(120), accountCode: "1100", accountHead: "Accounts Receivable", debit: 3450000, credit: 0 },
+  { id: "ob5", date: daysAgo(120), accountCode: "2000", accountHead: "Accounts Payable", debit: 0, credit: 1280000 },
+  { id: "ob6", date: daysAgo(120), accountCode: "2100", accountHead: "Rent Payable", debit: 0, credit: 75000 },
+  { id: "ob7", date: daysAgo(120), accountCode: "3000", accountHead: "Capital", debit: 0, credit: 5115000 },
 ];
 
 // Helpers
