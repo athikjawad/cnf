@@ -62,6 +62,7 @@ function AccountsPage() {
             <TabsTrigger value="voucher">Voucher Entry</TabsTrigger>
             <TabsTrigger value="ledger">Voucher Ledger</TabsTrigger>
             <TabsTrigger value="coa">Chart of Accounts</TabsTrigger>
+            <TabsTrigger value="opening">Opening Balance</TabsTrigger>
           </TabsList>
 
           <TabsContent value="voucher" className="mt-4 grid gap-4 lg:grid-cols-3">
