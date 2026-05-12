@@ -173,26 +173,11 @@ function AccountsPage() {
           </TabsContent>
 
           <TabsContent value="coa" className="mt-4">
-            <Card>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[120px]">Code</TableHead>
-                    <TableHead>Account Name</TableHead>
-                    <TableHead>Type</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {chartOfAccounts.map((a) => (
-                    <TableRow key={a.code}>
-                      <TableCell className="font-mono">{a.code}</TableCell>
-                      <TableCell className="font-medium">{a.name}</TableCell>
-                      <TableCell><span className="rounded bg-secondary px-2 py-0.5 text-xs">{a.type}</span></TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Card>
+            <ChartOfAccountsTab />
+          </TabsContent>
+
+          <TabsContent value="opening" className="mt-4">
+            <OpeningBalanceTab />
           </TabsContent>
         </Tabs>
       </div>
