@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { vouchers, chartOfAccounts, jobs, openingBalances, fmtBDT, fmtDate, fmtJobNo, type ChartOfAccount, type OpeningBalance } from "@/lib/mock-data";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import {
