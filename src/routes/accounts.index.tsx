@@ -24,8 +24,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { vouchers, chartOfAccounts, jobs, fmtBDT, fmtDate, fmtJobNo } from "@/lib/mock-data";
-import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/accounts/")({
